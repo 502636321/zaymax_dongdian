@@ -1,0 +1,86 @@
+package com.zaymax.dongdian.domain;
+
+import org.hibernate.annotations.GenericGenerator;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import javax.persistence.*;
+import java.io.Serializable;
+import java.util.Date;
+
+/**
+ * Created by huiquan on 2017/2/27.
+ */
+@MappedSuperclass
+@EntityListeners(value = AuditingEntityListener.class)
+public class BaseDomain implements Serializable {
+    /**
+     * 主键，采用UUID
+     */
+    @Id
+    @Column(name = "ID")
+    @GenericGenerator(name = "uuid", strategy = "uuid")
+    @GeneratedValue(generator = "uuid")
+    private String id;
+
+    /**
+     * 记录增加时间
+     */
+    @Column(name = "CREATED_DATE")
+    @CreatedDate
+    private Date createdDate;
+
+    /**
+     * 记录最后修改时间
+     */
+    @Column(name = "LAST_MODIFIED_DATE")
+    @LastModifiedDate
+    private Date lastModifiedDate;
+
+    @Column(name = "DELETED")
+    private Boolean deleted = Boolean.FALSE;
+
+    @Column(name = "DESCRIPTION")
+    private String description;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public Date getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(Date createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public Date getLastModifiedDate() {
+        return lastModifiedDate;
+    }
+
+    public void setLastModifiedDate(Date lastModifiedDate) {
+        this.lastModifiedDate = lastModifiedDate;
+    }
+
+    public Boolean getDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(Boolean deleted) {
+        this.deleted = deleted;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+}
