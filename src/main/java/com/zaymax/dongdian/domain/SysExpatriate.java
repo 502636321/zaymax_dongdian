@@ -3,9 +3,7 @@ package com.zaymax.dongdian.domain;
 import com.zaymax.dongdian.domain.enums.CfgGender;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Date;
 
 /**
@@ -61,14 +59,16 @@ public class SysExpatriate extends BaseDomain {
     /**
      * 派往国别
      */
-    @Column(name = "COUNTRY_ID")
+    @ManyToOne
+    @JoinColumn(name = "COUNTRY_ID")
     private BaseCountry country;
 
 
     /**
      * 雇主名称
      */
-    @Column(name = "EMPLOYER_ID")
+    @ManyToOne
+    @JoinColumn(name = "EMPLOYER_ID")
     private BaseEmployer employer;
 
     /**
@@ -83,6 +83,20 @@ public class SysExpatriate extends BaseDomain {
      */
     @Column(name = "CONTRACT_PERIOD")
     private Integer contractPeriod;
+
+    /**
+     * 社会保险
+     */
+    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST})
+    @JoinColumn(name = "SOCIAL_INSURANCE_ID")
+    private SysSocialInsurance socialInsurance;
+
+    /**
+     * 商业保险
+     */
+    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST})
+    @JoinColumn(name = "COMMERCIAL_INSURANCE_ID")
+    private SysCommercialInsurance commercialInsurance;
 
     public String getNumber() {
         return number;
@@ -170,5 +184,21 @@ public class SysExpatriate extends BaseDomain {
 
     public void setContractPeriod(Integer contractPeriod) {
         this.contractPeriod = contractPeriod;
+    }
+
+    public SysSocialInsurance getSocialInsurance() {
+        return socialInsurance;
+    }
+
+    public void setSocialInsurance(SysSocialInsurance socialInsurance) {
+        this.socialInsurance = socialInsurance;
+    }
+
+    public SysCommercialInsurance getCommercialInsurance() {
+        return commercialInsurance;
+    }
+
+    public void setCommercialInsurance(SysCommercialInsurance commercialInsurance) {
+        this.commercialInsurance = commercialInsurance;
     }
 }

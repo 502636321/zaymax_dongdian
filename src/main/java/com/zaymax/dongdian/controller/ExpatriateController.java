@@ -1,7 +1,10 @@
 package com.zaymax.dongdian.controller;
 
+import com.zaymax.dongdian.domain.BaseCountry;
+import com.zaymax.dongdian.domain.BaseEmployer;
 import com.zaymax.dongdian.domain.SysExpatriate;
 import com.zaymax.dongdian.domain.enums.CfgGender;
+import com.zaymax.dongdian.service.BasicService;
 import com.zaymax.dongdian.service.ExpatriateService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,6 +16,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 /**
  * 外派人员控制器
  * Created by soy50 on 2017/3/26.
@@ -23,6 +28,10 @@ public class ExpatriateController extends BaseController {
 
     @Autowired
     private ExpatriateService expatriateService;
+
+    @Autowired
+    private BasicService basicService;
+
 
     /**
      * 外派人员主页
@@ -104,6 +113,8 @@ public class ExpatriateController extends BaseController {
         SysExpatriate expatriate = expatriateService.findExpatriate(id);
         model.addAttribute("expatriate", expatriate);
         model.addAttribute("genders", CfgGender.values());
+        model.addAttribute("countries", basicService.findAllCountry());
+        model.addAttribute("employers", basicService.findAllEmployer());
         return "admin/expatriate/expatriate_edit";
     }
 
@@ -129,6 +140,8 @@ public class ExpatriateController extends BaseController {
             setErrorMessage(model, "expatriate_action_edit_error");
         }
         model.addAttribute("genders", CfgGender.values());
+        model.addAttribute("countries", basicService.findAllCountry());
+        model.addAttribute("employers", basicService.findAllEmployer());
         return "admin/expatriate/expatriate_edit";
     }
 

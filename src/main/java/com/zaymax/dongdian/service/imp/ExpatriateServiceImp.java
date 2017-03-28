@@ -3,10 +3,9 @@ package com.zaymax.dongdian.service.imp;
 import com.google.common.base.Optional;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
-import com.zaymax.dongdian.domain.BaseCountry;
-import com.zaymax.dongdian.domain.SysExpatriate;
-import com.zaymax.dongdian.domain.SysExpatriate_;
+import com.zaymax.dongdian.domain.*;
 import com.zaymax.dongdian.repository.BaseCountryRepository;
+import com.zaymax.dongdian.repository.BaseEmployerRepository;
 import com.zaymax.dongdian.repository.SysExpatriateRepository;
 import com.zaymax.dongdian.service.BasicService;
 import com.zaymax.dongdian.service.ExpatriateService;
@@ -34,8 +33,11 @@ public class ExpatriateServiceImp implements ExpatriateService {
     @Autowired
     private SysExpatriateRepository expatriateRepository;
 
-    @Autowired
+    @Autowired //派往国别
     private BaseCountryRepository countryRepository;
+
+    @Autowired //雇主
+    private BaseEmployerRepository employerRepository;
 
     @Autowired
     private BasicService basicService;
@@ -84,8 +86,45 @@ public class ExpatriateServiceImp implements ExpatriateService {
             editExpatriate1.setCardNO(expatriate.getCardNO()); //身份证号
             editExpatriate1.setPassportNO(expatriate.getPassportNO()); //护照号
             editExpatriate1.setContactMobile(expatriate.getContactMobile()); //联系电话
-            //外派国别
+            if (expatriate.getCountry() != null
+                    && !Strings.isNullOrEmpty(expatriate.getCountry().getId())) {
+                editExpatriate1.setCountry(countryRepository.findOne(expatriate.getCountry().getId()));//外派国别
+            }
+            if (expatriate.getEmployer() != null
+                    && !Strings.isNullOrEmpty(expatriate.getEmployer().getId())) {
+                editExpatriate1.setEmployer(employerRepository.findOne(expatriate.getEmployer().getId())); //雇主
+            }
+            editExpatriate1.setAddress(expatriate.getAddress());
+            editExpatriate1.setContractPeriod(expatriate.getContractPeriod()); //合同周期
             editExpatriate1.setExpatriateDate(expatriate.getExpatriateDate()); //外派时间
+
+            //社会保险
+            SysSocialInsurance editSocialInsurance = editExpatriate1.getSocialInsurance();
+            if (editSocialInsurance == null) {
+                editExpatriate1.setSocialInsurance(expatriate.getSocialInsurance());
+            } else {
+                SysSocialInsurance socialInsurance = expatriate.getSocialInsurance();
+                if (socialInsurance != null) {
+                    editSocialInsurance.setInsuranceDate(socialInsurance.getInsuranceDate());
+                    editSocialInsurance.setPersonalCode(socialInsurance.getPersonalCode());
+                    editSocialInsurance.setRadices(socialInsurance.getRadices());
+                    editSocialInsurance.setCompanyRadices(socialInsurance.getCompanyRadices());
+                    editSocialInsurance.setPersonalRadices(socialInsurance.getPersonalRadices());
+                }
+            }
+            //商业保险
+            SysCommercialInsurance editCommercialInsurance = editExpatriate1.getCommercialInsurance();
+            if (editCommercialInsurance == null) {
+                editExpatriate1.setCommercialInsurance(expatriate.getCommercialInsurance());
+            } else {
+                SysCommercialInsurance commercialInsurance = expatriate.getCommercialInsurance();
+                if (commercialInsurance != null) {
+                    editCommercialInsurance.setPremium(commercialInsurance.getPremium()); //保费
+                    editCommercialInsurance.setPaid(commercialInsurance.getPaid()); //保额
+                    editCommercialInsurance.setStartPeriod(commercialInsurance.getStartPeriod()); //保险期限（开始）
+                    editCommercialInsurance.setEndPeriod(commercialInsurance.getEndPeriod()); //保险期限（结束）
+                }
+            }
             return expatriateRepository.save(editExpatriate1);
         }
         return editExpatriate1;

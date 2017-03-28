@@ -43,8 +43,12 @@
                         <th class="col-md-1"><@spring.message code="expatriate_attribute_name" /></th>
                         <th class="col-md-1"><@spring.message code="expatriate_attribute_gender" /></th>
                         <th class="col-md-2"><@spring.message code="expatriate_attribute_card_no" /></th>
-                        <th class="col-md-2"><@spring.message code="domain_attribute_last_modified_by" /></th>
-                        <th class="col-md-3"><@spring.message code="domain_attribute_last_modified_date" /></th>
+                        <th class="col-md-1"><@spring.message code="expatriate_attribute_country" /></th>
+                        <th class="col-md-1"><@spring.message code="expatriate_attribute_expatriate_date" /></th>
+                        <th class="col-md-1"><@spring.message code="expatriate_attribute_contract_period" /></th>
+                        <th class="col-md-1"><@spring.message code="expatriate_attribute_employer" /></th>
+                        <th class="col-md-1" colspan="5"><@spring.message code="social_insurance_index" /></th>
+                        <th class="col-md-1" colspan="3"><@spring.message code="commercial_insurance_index" /></th>
                         <th class="col-md-2"></th>
                     </tr>
                     </thead>
@@ -55,8 +59,20 @@
                         <td>${ (expatriate.name)!"" }</td>
                         <td><@spring.message code="${ (expatriate.gender)!'blank' }" /></td>
                         <td>${ (expatriate.cardNO)!"" }</td>
-                        <td></td>
-                        <td>${ (expatriate.lastModifiedDate)!"" }</td>
+                        <td>${ (expatriate.country.name)!"" }</td>
+                        <td>${ (expatriate.expatriateDate?string("yyyy-MM-dd"))!"" }</td>
+                        <td>${ (expatriate.contractPeriod)!0 }</td>
+                        <td>${ (expatriate.employer.name)!"" }</td>
+                        <#--社会保险-->
+                        <td>${ (expatriate.socialInsurance.insuranceDate?string("yyyy-MM-dd"))!"" }</td>
+                        <td>${ (expatriate.socialInsurance.personalCode)!"" }</td>
+                        <td>${ ((expatriate.socialInsurance.radices)!0)?string("#") }</td>
+                        <td>${ ((expatriate.socialInsurance.companyRadices)!0)?string("#") }</td>
+                        <td>${ ((expatriate.socialInsurance.personalRadices)!0)?string("#") }</td>
+                        <#--商业保险-->
+                        <td>${ ((expatriate.commercialInsurance.premium)!0)?string("#") }</td>
+                        <td>${ ((expatriate.commercialInsurance.paid)!0)?string("#") }</td>
+                        <td>${ (expatriate.commercialInsurance.startPeriod?string("yyyy-MM-dd"))!"" }-${ (expatriate.commercialInsurance.endPeriod?string("yyyy-MM-dd"))!"" }</td>
                         <td>
                             <a href="/edit/${ (expatriate.id)!"" }" >
                                 <i class="glyphicon glyphicon-edit" ></i><@spring.message code="button_edit" />
