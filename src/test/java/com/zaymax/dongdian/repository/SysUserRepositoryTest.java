@@ -6,6 +6,8 @@ import com.zaymax.dongdian.security.PasswordEncoder;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.Optional;
+
 import static org.junit.Assert.*;
 
 /**
@@ -21,11 +23,15 @@ public class SysUserRepositoryTest extends ZaymaxDongdianApplicationTests {
 
     @Test
     public void save() throws Exception {
-//        SysUser user = new SysUser();
-//        user.setUsername("admin");
-//        user.setPassword(passwordEncoder.encode("admin"));
-//
-//        userRepository.save(user);
+        String username = "admin";
+        Optional<SysUser> userOptional = userRepository.findTopByUsernameAndDeletedFalse(username);
+        if (!userOptional.isPresent()) {
+            SysUser user = new SysUser();
+            user.setUsername("admin");
+            user.setPassword(passwordEncoder.encode("admin"));
+
+            userRepository.save(user);
+        }
     }
 
     @Test
@@ -43,4 +49,9 @@ public class SysUserRepositoryTest extends ZaymaxDongdianApplicationTests {
 
     }
 
+    @Test
+    public void findOne() throws Exception {
+        SysUser user = userRepository.findOne("402881e75b0b3104015b0b311d180000");
+        System.out.println(user.getLocked());
+    }
 }

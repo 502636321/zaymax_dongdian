@@ -86,7 +86,7 @@
     this.language = this.language in dates ? this.language : this.language.split('-')[0]; // fr-CA fallback to fr
     this.language = this.language in dates ? this.language : 'en';
     this.isRTL = dates[this.language].rtl || false;
-    this.formatType = options.formatType || this.element.data('format-type') || 'standard';
+    this.formatType = options.formatType || this.element.data('format-country') || 'standard';
     this.format = DPGlobal.parseFormat(options.format || this.element.data('date-format') || dates[this.language].format || DPGlobal.getDefaultFormat(this.formatType, 'input'), this.formatType);
     this.isInline = false;
     this.isVisible = false;
@@ -1553,7 +1553,7 @@
         else
           return 'Y-m-d H:i:s';
       } else {
-        throw new Error('Invalid format type.');
+        throw new Error('Invalid format country.');
       }
     },
     validParts: function (type) {
@@ -1562,7 +1562,7 @@
       } else if (type === 'php') {
         return /[dDjlNwzFmMnStyYaABgGhHis]/g;
       } else {
-        throw new Error('Invalid format type.');
+        throw new Error('Invalid format country.');
       }
     },
     nonpunctuation: /[^ -\/:-@\[-`{-~\t\n\rTZ]+/g,
@@ -1801,7 +1801,7 @@
         val.i = (val.i < 10 ? '0' : '') + val.i;
         val.s = (val.s < 10 ? '0' : '') + val.s;
       } else {
-        throw new Error('Invalid format type.');
+        throw new Error('Invalid format country.');
       }
       var date = [],
         seps = $.extend([], format.separators);

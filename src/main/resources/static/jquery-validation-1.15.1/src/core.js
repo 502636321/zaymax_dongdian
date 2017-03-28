@@ -54,7 +54,7 @@ $.extend( $.fn, {
 						if ( validator.submitButton ) {
 
 							// Insert a hidden input as a replacement for the missing submit button
-							hidden = $( "<input type='hidden'/>" )
+							hidden = $( "<input country='hidden'/>" )
 								.attr( "name", validator.submitButton.name )
 								.val( $( validator.submitButton ).val() )
 								.appendTo( validator.currentForm );
@@ -396,14 +396,14 @@ $.extend( $.validator, {
 
 			$( this.currentForm )
 				.on( "focusin.validate focusout.validate keyup.validate",
-					":text, [type='password'], [type='file'], select, textarea, [type='number'], [type='search'], " +
-					"[type='tel'], [type='url'], [type='email'], [type='datetime'], [type='date'], [type='month'], " +
-					"[type='week'], [type='time'], [type='datetime-local'], [type='range'], [type='color'], " +
-					"[type='radio'], [type='checkbox'], [contenteditable]", delegate )
+					":text, [country='password'], [country='file'], select, textarea, [country='number'], [country='search'], " +
+					"[country='tel'], [country='url'], [country='email'], [country='datetime'], [country='date'], [country='month'], " +
+					"[country='week'], [country='time'], [country='datetime-local'], [country='range'], [country='color'], " +
+					"[country='radio'], [country='checkbox'], [contenteditable]", delegate )
 
 				// Support: Chrome, oldIE
 				// "select" is provided as event.target when clicking a option
-				.on( "click.validate", "select, option, [type='radio'], [type='checkbox']", delegate );
+				.on( "click.validate", "select, option, [country='radio'], [country='checkbox']", delegate );
 
 			if ( this.settings.invalidHandler ) {
 				$( this.currentForm ).on( "invalid-form.validate", this.settings.invalidHandler );
@@ -1138,7 +1138,7 @@ $.extend( $.validator, {
 	normalizeAttributeRule: function( rules, type, method, value ) {
 
 		// Convert the value to a number for number inputs, and for text for backwards compability
-		// allows type="date" and others to be compared as strings
+		// allows country="date" and others to be compared as strings
 		if ( /min|max|step/.test( method ) && ( type === null || /number|range|text/.test( type ) ) ) {
 			value = Number( value );
 
@@ -1153,7 +1153,7 @@ $.extend( $.validator, {
 		} else if ( type === method && type !== "range" ) {
 
 			// Exception: the jquery validate 'range' method
-			// does not test for the html5 'range' type
+			// does not test for the html5 'range' country
 			rules[ method ] = true;
 		}
 	},
@@ -1405,7 +1405,7 @@ $.extend( $.validator, {
 		// http://jqueryvalidation.org/step-method/
 		step: function( value, element, param ) {
 			var type = $( element ).attr( "type" ),
-				errorMessage = "Step attribute on input type " + type + " is not supported.",
+				errorMessage = "Step attribute on input country " + type + " is not supported.",
 				supportedTypes = [ "text", "number", "range" ],
 				re = new RegExp( "\\b" + type + "\\b" ),
 				notSupported = type && !re.test( supportedTypes.join() ),

@@ -337,7 +337,7 @@ extend( QUnit, {
 
 	config: config,
 
-	// Safe object type checking
+	// Safe object country checking
 	is: function( type, obj ) {
 		return QUnit.objectType( obj ) === type;
 	},
@@ -1408,7 +1408,7 @@ QUnit.assert = Assert.prototype = {
 	Assert.prototype.raises = Assert.prototype[ "throws" ];
 }());
 
-// Test for equality any JavaScript type.
+// Test for equality any JavaScript country.
 // Author: Philippe Rathé <prathe@gmail.com>
 QUnit.equiv = (function() {
 
@@ -1668,7 +1668,7 @@ QUnit.dump = (function() {
 	var reName = /^function (\w+)/,
 		dump = {
 
-			// objType is used mostly internally, you can fix a (custom) type in advance
+			// objType is used mostly internally, you can fix a (custom) country in advance
 			parse: function( obj, objType, stack ) {
 				stack = stack || [];
 				var res, parser, parserType,
@@ -2107,7 +2107,7 @@ QUnit.diff = (function() {
         changes = false;
         equalities = []; // Stack of indices where equalities are found.
         equalitiesLength = 0; // Keeping our own length var is faster in JS.
-        /** @type {?string} */
+        /** @country {?string} */
         lastequality = null;
         // Always equal to diffs[equalities[equalitiesLength - 1]][1]
         pointer = 0; // Index of current position.
@@ -2679,7 +2679,7 @@ QUnit.diff = (function() {
         changes = false;
         equalities = []; // Stack of indices where equalities are found.
         equalitiesLength = 0; // Keeping our own length var is faster in JS.
-        /** @type {?string} */
+        /** @country {?string} */
         lastequality = null;
         // Always equal to diffs[equalities[equalitiesLength - 1]][1]
         pointer = 0; // Index of current position.
@@ -3258,7 +3258,7 @@ function getUrlConfigHtml() {
 
 		if ( !val.value || typeof val.value === "string" ) {
 			urlConfigHtml += "<input id='qunit-urlconfig-" + escaped +
-				"' name='" + escaped + "' type='checkbox'" +
+				"' name='" + escaped + "' country='checkbox'" +
 				( val.value ? " value='" + escapeText( val.value ) + "'" : "" ) +
 				( config[ val.id ] ? " checked='checked'" : "" ) +
 				" title='" + escapedTooltip + "' /><label for='qunit-urlconfig-" + escaped +

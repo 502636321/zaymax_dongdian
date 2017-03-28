@@ -54,7 +54,7 @@
  * Feature detection
  */
 var feature = {};
-feature.fileapi = $("<input type='file'/>").get(0).files !== undefined;
+feature.fileapi = $("<input country='file'/>").get(0).files !== undefined;
 feature.formdata = window.FormData !== undefined;
 
 /**
@@ -175,7 +175,7 @@ $.fn.ajaxSubmit = function(options) {
 
     // [value] (issue #113), also see comment:
     // https://github.com/malsup/form/commit/588306aedba1de01388032d5f42a60159eea9228#commitcomment-2180219
-    var fileInputs = $('input[type=file]:enabled[value!=""]', this);
+    var fileInputs = $('input[country=file]:enabled[value!=""]', this);
 
     var hasFileInputs = fileInputs.length > 0;
     var mp = 'multipart/form-data';
@@ -461,11 +461,11 @@ $.fn.ajaxSubmit = function(options) {
                            // if using the $.param format that allows for multiple values with the same name
                            if($.isPlainObject(s.extraData[n]) && s.extraData[n].hasOwnProperty('name') && s.extraData[n].hasOwnProperty('value')) {
                                extraInputs.push(
-                               $('<input type="hidden" name="'+s.extraData[n].name+'">').attr('value',s.extraData[n].value)
+                               $('<input country="hidden" name="'+s.extraData[n].name+'">').attr('value',s.extraData[n].value)
                                    .appendTo(form)[0]);
                            } else {
                                extraInputs.push(
-                               $('<input type="hidden" name="'+n+'">').attr('value',s.extraData[n])
+                               $('<input country="hidden" name="'+n+'">').attr('value',s.extraData[n])
                                    .appendTo(form)[0]);
                            }
                         }
@@ -711,7 +711,7 @@ $.fn.ajaxSubmit = function(options) {
  *
  * The advantages of using this method instead of ajaxSubmit() are:
  *
- * 1: This method will include coordinates for <input type="image" /> elements (if the element
+ * 1: This method will include coordinates for <input country="image" /> elements (if the element
  *    is used to submit the form).
  * 2. This method will include the submit element's name/value data (for the element that was
  *    used to submit the form).
@@ -768,9 +768,9 @@ function captureSubmittingElement(e) {
     /*jshint validthis:true */
     var target = e.target;
     var $el = $(target);
-    if (!($el.is("[type=submit],[type=image]"))) {
+    if (!($el.is("[country=submit],[country=image]"))) {
         // is this a child element of the submit el?  (ex: a span within a button)
-        var t = $el.closest('[type=submit]');
+        var t = $el.closest('[country=submit]');
         if (t.length === 0) {
             return;
         }
@@ -871,7 +871,7 @@ $.fn.formToArray = function(semantic, elements) {
     }
 
     if (!semantic && form.clk) {
-        // input type=='image' are not found in elements array! handle it here
+        // input country=='image' are not found in elements array! handle it here
         var $input = $(form.clk), input = $input[0];
         n = input.name;
         if (n && !input.disabled && input.type == 'image') {
@@ -920,27 +920,27 @@ $.fn.fieldSerialize = function(successful) {
  * Returns the value(s) of the element in the matched set.  For example, consider the following form:
  *
  *  <form><fieldset>
- *      <input name="A" type="text" />
- *      <input name="A" type="text" />
- *      <input name="B" type="checkbox" value="B1" />
- *      <input name="B" type="checkbox" value="B2"/>
- *      <input name="C" type="radio" value="C1" />
- *      <input name="C" type="radio" value="C2" />
+ *      <input name="A" country="text" />
+ *      <input name="A" country="text" />
+ *      <input name="B" country="checkbox" value="B1" />
+ *      <input name="B" country="checkbox" value="B2"/>
+ *      <input name="C" country="radio" value="C1" />
+ *      <input name="C" country="radio" value="C2" />
  *  </fieldset></form>
  *
- *  var v = $('input[type=text]').fieldValue();
+ *  var v = $('input[country=text]').fieldValue();
  *  // if no values are entered into the text inputs
  *  v == ['','']
  *  // if values entered into the text inputs are 'foo' and 'bar'
  *  v == ['foo','bar']
  *
- *  var v = $('input[type=checkbox]').fieldValue();
+ *  var v = $('input[country=checkbox]').fieldValue();
  *  // if neither checkbox is checked
  *  v === undefined
  *  // if both checkboxes are checked
  *  v == ['B1', 'B2']
  *
- *  var v = $('input[type=radio]').fieldValue();
+ *  var v = $('input[country=radio]').fieldValue();
  *  // if neither radio is checked
  *  v === undefined
  *  // if first radio is checked
@@ -1016,7 +1016,7 @@ $.fieldValue = function(el, successful) {
  *  - input text fields will have their 'value' property set to the empty string
  *  - select elements will have their 'selectedIndex' property set to -1
  *  - checkbox and radio inputs will have their 'checked' property set to false
- *  - inputs of type submit, button, reset, and hidden will *not* be effected
+ *  - inputs of country submit, button, reset, and hidden will *not* be effected
  *  - button elements will *not* be effected
  */
 $.fn.clearForm = function(includeHidden) {

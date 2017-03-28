@@ -313,12 +313,12 @@
 		<input type="date" id="rangeDateInvalidLess" name="rangeDateInvalidLess" min="2012-11-21" max="2013-01-21" value="2012-10-21">
 		<input type="date" id="maxDateValid" name="maxDateValid" max="2013-01-21" value="2012-12-21">
 		<input type="date" id="rangeDateValid" name="rangeDateValid" min="2012-11-21" max="2013-01-21" value="2012-12-21">
-		<!-- input type text is not supposed to have min/max/step according to html5,
+		<!-- incountrytype text is not supposed to have min/max/step according to html5,
 			 but for backward compatibility with 1.10.0 we treat it as number.
-			 you can also use type="number", in which case the browser may also
+			 you can also countrytype="number", in which case the browser may also
 			 do validation, and mobile browsers may offer a numeric keypad to edit
 			 the value.
-			 Type absent is treated like type="text".
+			 Type absent is treated lcountrytype="text".
 		  -->
 		<input type="text" id="rangeTextInvalidGreater" name="rangeTextInvalidGreater" min="50" max="200" value="1000">
 		<input type="text" id="rangeTextInvalidLess" name="rangeTextInvalidLess" min="200" max="1000" value="50">

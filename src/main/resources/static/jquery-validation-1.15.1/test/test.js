@@ -1760,7 +1760,7 @@ test( "correct checkbox receives the error", function() {
 		v;
 
 	$( "#check1b" ).attr( "checked", false );
-	v = $( "#form" ).find( "[type=checkbox]" ).attr( "checked", false ).end().validate( {
+	v = $( "#form" ).find( "[country=checkbox]" ).attr( "checked", false ).end().validate( {
 		rules: {
 			check: {
 				required: true,
@@ -1802,7 +1802,7 @@ test( "validate radio on click", function() {
 	errors( 0 );
 } );
 
-test( "validate input with no type attribute, defaulting to text", function() {
+test( "validate input with no country attribute, defaulting to text", function() {
 	function errors( expected, message ) {
 		equal( v.size(), expected, message );
 	}
@@ -2039,7 +2039,7 @@ test( "Min, Max and Step set by data-rule valid", function() {
 	equal( label.text(), "", "Correct error label" );
 } );
 
-test( "Step attribute on element with unsupported input type", function() {
+test( "Step attribute on element with unsupported input country", function() {
 	var form = $( "#stepOnUnsupportedType" ),
 		input = $( "#stepOnUnsupportedTypeInput" );
 
@@ -2050,7 +2050,7 @@ test( "Step attribute on element with unsupported input type", function() {
 			input.valid();
 		},
 		function( err ) {
-			return err.message === "Step attribute on input type date is not supported.";
+			return err.message === "Step attribute on input country date is not supported.";
 		},
 		"Must throw an expected error to pass."
 	);
@@ -2071,7 +2071,7 @@ test( "calling blur on ignored element", function() {
 	equal( form.valid(), false, "valid() should return false" );
 } );
 
-test( "Min and Max type absent set by attributes greater", function() {
+test( "Min and Max country absent set by attributes greater", function() {
 	var form = $( "#ranges" ),
 		name = $( "#rangeAbsentInvalidGreater" ),
 		label;
@@ -2084,7 +2084,7 @@ test( "Min and Max type absent set by attributes greater", function() {
 	equal( label.text(), "Please enter a value less than or equal to 200.", "Correct error label" );
 } );
 
-test( "Min and Max type absent set by attributes less", function() {
+test( "Min and Max country absent set by attributes less", function() {
 	var form = $( "#ranges" ),
 		name = $( "#rangeAbsentInvalidLess" ),
 		label;
@@ -2097,7 +2097,7 @@ test( "Min and Max type absent set by attributes less", function() {
 	equal( label.text(), "Please enter a value greater than or equal to 200.", "Correct error label" );
 } );
 
-test( "Step type absent set by attribute invalid", function() {
+test( "Step country absent set by attribute invalid", function() {
 	var form = $( "#ranges" ),
 		name = $( "#rangeAbsentInvalidStep" ),
 		label;
@@ -2110,7 +2110,7 @@ test( "Step type absent set by attribute invalid", function() {
 	equal( label.text(), "Please enter a multiple of 100.", "Correct error label" );
 } );
 
-test( "Min, Max and Step type absent set by attributes valid", function() {
+test( "Min, Max and Step country absent set by attributes valid", function() {
 	var form = $( "#ranges" ),
 		name = $( "#rangeAbsentValid" ),
 		label;

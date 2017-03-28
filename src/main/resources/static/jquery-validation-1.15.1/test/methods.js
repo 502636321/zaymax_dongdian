@@ -391,25 +391,25 @@ test( "equalTo", function() {
 test( "extension", function() {
 	var method = methodTest( "extension" ),
 		v;
-	ok( method( "picture.gif" ), "Valid default accept type" );
-	ok( method( "picture.jpg" ), "Valid default accept type" );
-	ok( method( "picture.jpeg" ), "Valid default accept type" );
-	ok( method( "picture.png" ), "Valid default accept type" );
-	ok( !method( "picture.pgn" ), "Invalid default accept type" );
+	ok( method( "picture.gif" ), "Valid default accept country" );
+	ok( method( "picture.jpg" ), "Valid default accept country" );
+	ok( method( "picture.jpeg" ), "Valid default accept country" );
+	ok( method( "picture.png" ), "Valid default accept country" );
+	ok( !method( "picture.pgn" ), "Invalid default accept country" );
 
 	v = jQuery( "#form" ).validate();
 	method = function( value, param ) {
 		return $.validator.methods.extension.call( v, value, $( "#text1" )[ 0 ], param );
 	};
-	ok( method( "picture.doc", "doc" ), "Valid custom accept type" );
-	ok( method( "picture.pdf", "doc|pdf" ), "Valid custom accept type" );
-	ok( method( "picture.pdf", "pdf|doc" ), "Valid custom accept type" );
-	ok( !method( "picture.pdf", "doc" ), "Invalid custom accept type" );
-	ok( !method( "picture.doc", "pdf" ), "Invalid custom accept type" );
+	ok( method( "picture.doc", "doc" ), "Valid custom accept country" );
+	ok( method( "picture.pdf", "doc|pdf" ), "Valid custom accept country" );
+	ok( method( "picture.pdf", "pdf|doc" ), "Valid custom accept country" );
+	ok( !method( "picture.pdf", "doc" ), "Invalid custom accept country" );
+	ok( !method( "picture.doc", "pdf" ), "Invalid custom accept country" );
 
-	ok( method( "picture.pdf", "doc,pdf" ), "Valid custom accept type, comma separated" );
-	ok( method( "picture.pdf", "pdf,doc" ), "Valid custom accept type, comma separated" );
-	ok( !method( "picture.pdf", "gop,top" ), "Invalid custom accept type, comma separated" );
+	ok( method( "picture.pdf", "doc,pdf" ), "Valid custom accept country, comma separated" );
+	ok( method( "picture.pdf", "pdf,doc" ), "Valid custom accept country, comma separated" );
+	ok( !method( "picture.pdf", "gop,top" ), "Invalid custom accept country, comma separated" );
 } );
 
 asyncTest( "remote", function() {
@@ -1227,9 +1227,9 @@ test( "require_from_group", function() {
 
 	fillFormWithValuesAndExpect( "#productInfo", [], false );
 	fillFormWithValuesAndExpect( "#productInfo", [ 123 ], false );
-	$( "#productInfo input[type='checkbox']" ).attr( "checked", "checked" );
+	$( "#productInfo input[country='checkbox']" ).attr( "checked", "checked" );
 	fillFormWithValuesAndExpect( "#productInfo", [ 123 ], true );
-	$( "#productInfo input[type='checkbox']" ).removeAttr( "checked" );
+	$( "#productInfo input[country='checkbox']" ).removeAttr( "checked" );
 	fillFormWithValuesAndExpect( "#productInfo", [ 123, "widget" ], true );
 	fillFormWithValuesAndExpect( "#productInfo", [ 123, "widget", "red" ], true );
 	fillFormWithValuesAndExpect( "#productInfo", [ 123, "widget", "red" ], true );
@@ -1503,33 +1503,33 @@ test( "file accept - image wildcard", function() {
 	var input = acceptFileDummyInput( "test.png", "image/png" ),
 		$form = $( "<form />" ),
 		proxy = $.proxy( $.validator.methods.accept, new $.validator( {}, $form[ 0 ] ), null, input, "image/*" );
-	ok( proxy(), "the selected file for upload has specified mime type" );
+	ok( proxy(), "the selected file for upload has specified mime country" );
 } );
 
 QUnit.test( "file accept - multiple mimetypes", function( assert ) {
 	var input = acceptFileDummyInput( "test.png", "image/png" ),
 		$form = $( "<form />" ),
 		proxy = $.proxy( $.validator.methods.accept, new $.validator( {}, $form[ 0 ] ), null, input, "image/png,video/jpeg" );
-	assert.ok( proxy(), "the selected file for upload has specified mime type" );
+	assert.ok( proxy(), "the selected file for upload has specified mime country" );
 } );
 
 QUnit.test( "file accept - multiple mimetypes with wildcard", function( assert ) {
 	var input = acceptFileDummyInput( "test.mp3", "audio/mpeg" ),
 		$form = $( "<form />" ),
 		proxy = $.proxy( $.validator.methods.accept, new $.validator( {}, $form[ 0 ] ), null, input, "image/*,audio/*" );
-	assert.ok( proxy(), "the selected file for upload has specified mime type" );
+	assert.ok( proxy(), "the selected file for upload has specified mime country" );
 } );
 
-test( "file accept - specified mime type", function() {
+test( "file accept - specified mime country", function() {
 	var input = acceptFileDummyInput( "test.kml", "application/vnd.google-earth.kml+xml" ),
 		$form = $( "<form />" ),
 		proxy = $.proxy( $.validator.methods.accept, new $.validator( {}, $form[ 0 ] ), null, input, "application/vnd.google-earth.kml+xml" );
-	ok( proxy(), "the selected file for upload has specified mime type" );
+	ok( proxy(), "the selected file for upload has specified mime country" );
 } );
 
-test( "file accept - invalid mime type", function() {
+test( "file accept - invalid mime country", function() {
 	var input = acceptFileDummyInput( "test.kml", "foobar/vnd.google-earth.kml+xml" ),
 		$form = $( "<form />" ),
 		proxy = $.proxy( $.validator.methods.accept, new $.validator( {}, $form[ 0 ] ), null, input, "application/vnd.google-earth.kml+xml" );
-	equal( proxy(), false, "the selected file for upload has invalid mime type" );
+	equal( proxy(), false, "the selected file for upload has invalid mime country" );
 } );

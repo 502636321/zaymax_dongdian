@@ -1,7 +1,9 @@
 package com.zaymax.dongdian.domain;
 
 import org.hibernate.annotations.GenericGenerator;
+import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -30,6 +32,22 @@ public class BaseDomain implements Serializable {
     @Column(name = "CREATED_DATE")
     @CreatedDate
     private Date createdDate;
+
+    /**
+     * 创建用户
+     */
+    @CreatedBy
+    @ManyToOne
+    @JoinColumn(name = "CREATED_BY_USER_ID")
+    private SysUser createdBy;
+
+    /**
+     * 最后修改用户
+     */
+    @LastModifiedBy
+    @ManyToOne
+    @JoinColumn(name = "LAST_MODIFIED_BY_USER_ID")
+    private SysUser lastModifiedBy;
 
     /**
      * 记录最后修改时间
@@ -82,5 +100,21 @@ public class BaseDomain implements Serializable {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public SysUser getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(SysUser createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public SysUser getLastModifiedBy() {
+        return lastModifiedBy;
+    }
+
+    public void setLastModifiedBy(SysUser lastModifiedBy) {
+        this.lastModifiedBy = lastModifiedBy;
     }
 }

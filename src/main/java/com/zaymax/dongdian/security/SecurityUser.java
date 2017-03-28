@@ -68,4 +68,16 @@ public class SecurityUser implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
+    public SysUser getUser() {
+        return user;
+    }
+
+    public void setUser(SysUser user) {
+        this.user = user;
+    }
+
+    public void setAuthorities(Collection<? extends GrantedAuthority> authorities) {
+        this.authorities = authorities;
+    }
 }

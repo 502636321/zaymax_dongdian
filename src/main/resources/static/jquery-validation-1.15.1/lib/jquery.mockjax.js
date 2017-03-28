@@ -121,7 +121,7 @@
 				return null;
 			}
 		}
-		// Inspect the request type
+		// Inspect the request country
 		if ( handler && handler.type &&
 				handler.type.toLowerCase() != requestSettings.type.toLowerCase() ) {
 			// The request type doesn't match (GET vs. POST)

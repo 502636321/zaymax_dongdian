@@ -1,15 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<#include "../public/meta.ftl" />
-<#include "../public/stylesheet.ftl" />
-    <!-- Custom styles for this template -->
-    <link href="/css/dashboard.css" rel="stylesheet">
-
-<#include "../public/script.ftl" />
+    <#include "../public/meta.ftl" />
+    <#include "../public/stylesheet.ftl" />
+    <#include "../public/script.ftl" />
 </head>
 
-<body>
+<body class="main-body">
 
 <#include "../public/navbar_header.ftl" />
 

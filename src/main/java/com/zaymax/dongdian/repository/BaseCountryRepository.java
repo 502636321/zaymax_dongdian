@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * 国家
@@ -20,4 +21,8 @@ public interface BaseCountryRepository extends JpaRepository<BaseCountry, String
     @Modifying
     @Query(value = "UPDATE BaseCountry t0 SET t0.deleted = true WHERE t0.id IN (?1)")
     int delete(List<String> strings);
+
+    List<BaseCountry> findTop20ByNameLikeAndDeletedFalse(String name);
+
+    Optional<BaseCountry> findTopByNameAndDeletedFalse(String name);
 }

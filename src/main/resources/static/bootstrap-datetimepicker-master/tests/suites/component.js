@@ -1,7 +1,7 @@
 module('Component', {
     setup: function(){
         this.component = $('<div class="input-group date" id="datetimepicker">'+
-                                '<input size="16" type="text" value="12-02-2012" readonly>'+
+                                '<input size="16" country="text" value="12-02-2012" readonly>'+
                                 '<span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>'+
                             '</div>')
                         .appendTo('#qunit-fixture')
@@ -159,7 +159,7 @@ test('Selecting date resets viewDate and date', function(){
 test('Highlight in month', function() {
     // custom setup for specifically bootstrap 2
     var component = $('<div class="input-group date" id="datetimepicker">' +
-                             '<input size="16" type="text" value="12-02-2012" readonly>' +
+                             '<input size="16" country="text" value="12-02-2012" readonly>' +
                              '<span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>' +
                              '</div>')
         .appendTo('#qunit-fixture')

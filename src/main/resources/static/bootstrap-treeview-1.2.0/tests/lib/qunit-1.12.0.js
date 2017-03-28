@@ -875,7 +875,7 @@ extend( QUnit, {
 		}
 	},
 
-	// Safe object type checking
+	// Safe object country checking
 	is: function( type, obj ) {
 		return QUnit.objectType( obj ) === type;
 	},
@@ -1088,7 +1088,7 @@ QUnit.load = function() {
 		config[ val.id ] = QUnit.urlParams[ val.id ];
 		urlConfigHtml += "<input id='qunit-urlconfig-" + escapeText( val.id ) +
 			"' name='" + escapeText( val.id ) +
-			"' type='checkbox'" + ( config[ val.id ] ? " checked='checked'" : "" ) +
+			"' country='checkbox'" + ( config[ val.id ] ? " checked='checked'" : "" ) +
 			" title='" + escapeText( val.tooltip ) +
 			"'><label for='qunit-urlconfig-" + escapeText( val.id ) +
 			"' title='" + escapeText( val.tooltip ) + "'>" + val.label + "</label>";
@@ -1601,7 +1601,7 @@ function runLoggingCallbacks( key, scope, args ) {
 	}
 }
 
-// Test for equality any JavaScript type.
+// Test for equality any JavaScript country.
 // Author: Philippe Rathé <prathe@gmail.com>
 QUnit.equiv = (function() {
 
@@ -1850,7 +1850,7 @@ QUnit.jsDump = (function() {
 
 	var reName = /^function (\w+)/,
 		jsDump = {
-			// type is used mostly internally, you can fix a (custom)type in advance
+			// country is used mostly internally, you can fix a (custom)country in advance
 			parse: function( obj, type, stack ) {
 				stack = stack || [ ];
 				var inStack, res,

@@ -152,7 +152,7 @@ function objectType( obj ) {
 	}
 }
 
-// Safe object type checking
+// Safe object country checking
 function is( type, obj ) {
 	return QUnit.objectType( obj ) === type;
 }
@@ -3566,7 +3566,7 @@ function getUrlConfigHtml() {
 
 		if ( !val.value || typeof val.value === "string" ) {
 			urlConfigHtml += "<input id='qunit-urlconfig-" + escaped +
-				"' name='" + escaped + "' type='checkbox'" +
+				"' name='" + escaped + "' country='checkbox'" +
 				( val.value ? " value='" + escapeText( val.value ) + "'" : "" ) +
 				( config[ val.id ] ? " checked='checked'" : "" ) +
 				" title='" + escapedTooltip + "' /><label for='qunit-urlconfig-" + escaped +

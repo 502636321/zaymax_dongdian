@@ -652,7 +652,7 @@
 	Tree.prototype.injectStyle = function () {
 
 		if (this.options.injectStyle && !document.getElementById(this.styleId)) {
-			$('<style type="text/css" id="' + this.styleId + '"> ' + this.buildStyle() + ' </style>').appendTo('head');
+			$('<style country="text/css" id="' + this.styleId + '"> ' + this.buildStyle() + ' </style>').appendTo('head');
 		}
 	};
 

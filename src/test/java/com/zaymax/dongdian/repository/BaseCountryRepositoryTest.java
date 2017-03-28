@@ -25,8 +25,11 @@ public class BaseCountryRepositoryTest extends ZaymaxDongdianApplicationTests {
 
     @Test
     public void findAll() throws Exception {
-        countryRepository.findAll().forEach(country -> {
-            System.out.printf("国家ID[%s], 国家名称[%s]%n", country.getId(), country.getName());
-        });
+        System.out.println(countryRepository.findAll().size());
+    }
+
+    @Test
+    public void findTop20ByNameLikeAndDeletedFalse() throws Exception {
+
     }
 }

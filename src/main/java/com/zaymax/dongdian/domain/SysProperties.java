@@ -42,6 +42,19 @@ public class SysProperties extends BaseDomain {
     @Column(name = "SYSTEM_TITLE")
     private String systemTitle;
 
+    /**
+     * 自动根据名称创建外派国别
+     * @return
+     */
+    @Column(name = "AUTO_CREATE_COUNTRY")
+    private Boolean autoCreateCountry = Boolean.FALSE;
+
+    /**
+     * 自动根据名称创建雇主
+     */
+    @Column(name = "AUTO_CREATE_EMPLOYER")
+    private Boolean autoCreateEmployer = Boolean.FALSE;
+
     public String getWxAppId() {
         return wxAppId;
     }
@@ -80,5 +93,21 @@ public class SysProperties extends BaseDomain {
 
     public void setWxAutoRefreshAccessTokenInterval(Integer wxAutoRefreshAccessTokenInterval) {
         this.wxAutoRefreshAccessTokenInterval = wxAutoRefreshAccessTokenInterval;
+    }
+
+    public Boolean getAutoCreateCountry() {
+        return autoCreateCountry;
+    }
+
+    public void setAutoCreateCountry(Boolean autoCreateCountry) {
+        this.autoCreateCountry = autoCreateCountry;
+    }
+
+    public Boolean getAutoCreateEmployer() {
+        return autoCreateEmployer;
+    }
+
+    public void setAutoCreateEmployer(Boolean autoCreateEmployer) {
+        this.autoCreateEmployer = autoCreateEmployer;
     }
 }

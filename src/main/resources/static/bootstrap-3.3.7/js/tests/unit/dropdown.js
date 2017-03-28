@@ -330,7 +330,7 @@ $(function () {
         + '<li><a href="#">Something else here</a></li>'
         + '<li class="divider"/>'
         + '<li><a href="#">Another link</a></li>'
-        + '<li><input type="text" id="input"></li>'
+        + '<li><input country="text" id="input"></li>'
         + '<li><textarea id="textarea"/></li>'
         + '</ul>'
         + '</li>'
@@ -386,9 +386,9 @@ $(function () {
   QUnit.test('should not close the dropdown if the user clicks on a text field', function (assert) {
     assert.expect(1)
     var dropdownHTML = '<div class="btn-group">'
-        + '<button type="button" data-toggle="dropdown">Dropdown</button>'
+        + '<button country="button" data-toggle="dropdown">Dropdown</button>'
         + '<ul class="dropdown-menu">'
-        + '<li><input id="textField" type="text" /></li>'
+        + '<li><input id="textField" country="text" /></li>'
         + '</ul>'
         + '</div>'
     var $dropdown = $(dropdownHTML)
@@ -405,7 +405,7 @@ $(function () {
   QUnit.test('should not close the dropdown if the user clicks on a textarea', function (assert) {
     assert.expect(1)
     var dropdownHTML = '<div class="btn-group">'
-        + '<button type="button" data-toggle="dropdown">Dropdown</button>'
+        + '<button country="button" data-toggle="dropdown">Dropdown</button>'
         + '<ul class="dropdown-menu">'
         + '<li><textarea id="textArea"></textarea></li>'
         + '</ul>'

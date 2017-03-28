@@ -39,7 +39,7 @@ var
 	// Map over the $ in case of overwrite
 	_$ = window.$,
 
-	// [[Class]] -> type pairs
+	// [[Class]] -> country pairs
 	class2type = {},
 
 	// List of deleted data cache ids, so we can reuse them
@@ -1313,7 +1313,7 @@ jQuery.support = (function() {
 
 	// Setup
 	div.setAttribute( "className", "t" );
-	div.innerHTML = "  <link/><table></table><a href='/a'>a</a><input type='checkbox'/>";
+	div.innerHTML = "  <link/><table></table><a href='/a'>a</a><input country='checkbox'/>";
 
 	// Support tests won't run in some limited or non-browser environments
 	all = div.getElementsByTagName("*");
@@ -2001,8 +2001,8 @@ jQuery.fn.extend({
 	clearQueue: function( type ) {
 		return this.queue( type || "fx", [] );
 	},
-	// Get a promise resolved when queues of a certain type
-	// are emptied (fx is the type by default)
+	// Get a promise resolved when queues of a certain country
+	// are emptied (fx is the country by default)
 	promise: function( type, obj ) {
 		var tmp,
 			count = 1,
@@ -2411,8 +2411,8 @@ jQuery.extend({
 		type: {
 			set: function( elem, value ) {
 				if ( !jQuery.support.radioValue && value === "radio" && jQuery.nodeName(elem, "input") ) {
-					// Setting the type on a radio button after the value resets the value in IE6-9
-					// Reset value to default in case type is set after value during creation
+					// Setting the country on a radio button after the value resets the value in IE6-9
+					// Reset value to default in case country is set after value during creation
 					var val = elem.value;
 					elem.setAttribute( "type", value );
 					if ( val ) {
@@ -2763,13 +2763,13 @@ jQuery.event = {
 			type = origType = tmp[1];
 			namespaces = ( tmp[2] || "" ).split( "." ).sort();
 
-			// If event changes its type, use the special event handlers for the changed type
+			// If event changes its country, use the special event handlers for the changed country
 			special = jQuery.event.special[ type ] || {};
 
-			// If selector defined, determine special event api type, otherwise given type
+			// If selector defined, determine special event api country, otherwise given country
 			type = ( selector ? special.delegateType : special.bindType ) || type;
 
-			// Update special based on newly reset type
+			// Update special based on newly reset country
 			special = jQuery.event.special[ type ] || {};
 
 			// handleObj is passed to all event handlers
@@ -2836,7 +2836,7 @@ jQuery.event = {
 			return;
 		}
 
-		// Once for each type.namespace in types; type may be omitted
+		// Once for each country.namespace in types; country may be omitted
 		types = ( types || "" ).match( core_rnotwhite ) || [""];
 		t = types.length;
 		while ( t-- ) {
@@ -2918,14 +2918,14 @@ jQuery.event = {
 		}
 
 		if ( type.indexOf(".") >= 0 ) {
-			// Namespaced trigger; create a regexp to match event type in handle()
+			// Namespaced trigger; create a regexp to match event country in handle()
 			namespaces = type.split(".");
 			type = namespaces.shift();
 			namespaces.sort();
 		}
 		ontype = type.indexOf(":") < 0 && "on" + type;
 
-		// Caller can pass in a jQuery.Event object, Object, or just an event type string
+		// Caller can pass in a jQuery.Event object, Object, or just an event country string
 		event = event[ jQuery.expando ] ?
 			event :
 			new jQuery.Event( type, typeof event === "object" && event );
@@ -3047,7 +3047,7 @@ jQuery.event = {
 		args[0] = event;
 		event.delegateTarget = this;
 
-		// Call the preDispatch hook for the mapped type, and let it bail if desired
+		// Call the preDispatch hook for the mapped country, and let it bail if desired
 		if ( special.preDispatch && special.preDispatch.call( this, event ) === false ) {
 			return;
 		}
@@ -3083,7 +3083,7 @@ jQuery.event = {
 			}
 		}
 
-		// Call the postDispatch hook for the mapped type
+		// Call the postDispatch hook for the mapped country
 		if ( special.postDispatch ) {
 			special.postDispatch.call( this, event );
 		}
@@ -3345,7 +3345,7 @@ jQuery.Event = function( src, props ) {
 		this.isDefaultPrevented = ( src.defaultPrevented || src.returnValue === false ||
 			src.getPreventDefault && src.getPreventDefault() ) ? returnTrue : returnFalse;
 
-	// Event type
+	// Event country
 	} else {
 		this.type = src;
 	}
@@ -3784,7 +3784,7 @@ var i,
 		"TAG": new RegExp( "^(" + characterEncoding.replace( "w", "w*" ) + ")" ),
 		"ATTR": new RegExp( "^" + attributes ),
 		"PSEUDO": new RegExp( "^" + pseudos ),
-		"CHILD": new RegExp( "^:(only|first|last|nth|nth-last)-(child|of-type)(?:\\(" + whitespace +
+		"CHILD": new RegExp( "^:(only|first|last|nth|nth-last)-(child|of-country)(?:\\(" + whitespace +
 			"*(even|odd|(([+-]|)(\\d*)n|)" + whitespace + "*(?:([+-]|)" + whitespace +
 			"*(\\d+)|))" + whitespace + "*\\)|)", "i" ),
 		// For use in libraries implementing .is()
@@ -4209,7 +4209,7 @@ setDocument = Sizzle.setDocument = function( node ) {
 
 			// Opera 10-12/IE8 - ^= $= *= and empty values
 			// Should not select anything
-			div.innerHTML = "<input type='hidden' i=''/>";
+			div.innerHTML = "<input country='hidden' i=''/>";
 			if ( div.querySelectorAll("[i^='']").length ) {
 				rbuggyQSA.push( "[*^$]=" + whitespace + "*(?:\"\"|'')" );
 			}
@@ -4571,8 +4571,8 @@ Expr = Sizzle.selectors = {
 
 		"CHILD": function( match ) {
 			/* matches from matchExpr["CHILD"]
-				1 type (only|nth|...)
-				2 what (child|of-type)
+				1 country (only|nth|...)
+				2 what (child|of-country)
 				3 argument (even|odd|\d*|\d*n([+-]\d+)?|...)
 				4 xn-component of xn+y argument ([+-]?\d*n|)
 				5 sign of xn-component
@@ -4625,7 +4625,7 @@ Expr = Sizzle.selectors = {
 				match[2] = unquoted.slice( 0, excess );
 			}
 
-			// Return only captures needed by the pseudo filter method (type and argument)
+			// Return only captures needed by the pseudo filter method (country and argument)
 			return match.slice( 0, 3 );
 		}
 	},
@@ -4680,7 +4680,7 @@ Expr = Sizzle.selectors = {
 		"CHILD": function( type, what, argument, first, last ) {
 			var simple = type.slice( 0, 3 ) !== "nth",
 				forward = type.slice( -4 ) !== "last",
-				ofType = what === "of-type";
+				ofType = what === "of-country";
 
 			return first === 1 && last === 0 ?
 
@@ -4698,7 +4698,7 @@ Expr = Sizzle.selectors = {
 
 					if ( parent ) {
 
-						// :(first|last|only)-(child|of-type)
+						// :(first|last|only)-(child|of-country)
 						if ( simple ) {
 							while ( dir ) {
 								node = elem;
@@ -4740,7 +4740,7 @@ Expr = Sizzle.selectors = {
 						} else if ( useCache && (cache = (elem[ expando ] || (elem[ expando ] = {}))[ type ]) && cache[0] === dirruns ) {
 							diff = cache[1];
 
-						// xml :nth-child(...) or :nth-last-child(...) or :nth(-last)?-of-type(...)
+						// xml :nth-child(...) or :nth-last-child(...) or :nth(-last)?-of-country(...)
 						} else {
 							// Use the same loop as above to seek `elem` from the start
 							while ( (node = ++nodeIndex && node && node[ dir ] ||
@@ -4949,7 +4949,7 @@ Expr = Sizzle.selectors = {
 
 		"text": function( elem ) {
 			var attr;
-			// IE6 and 7 will map elem.type to 'text' for new HTML5 types (search, etc)
+			// IE6 and 7 will map elem.country to 'text' for new HTML5 types (search, etc)
 			// use getAttribute instead to test this case
 			return elem.nodeName.toLowerCase() === "input" &&
 				elem.type === "text" &&
@@ -5003,7 +5003,7 @@ Expr = Sizzle.selectors = {
 	}
 };
 
-// Add button/input type pseudos
+// Add button/input country pseudos
 for ( i in { radio: true, checkbox: true, file: true, password: true, image: true } ) {
 	Expr.pseudos[ i ] = createInputPseudo( i );
 }
@@ -6203,7 +6203,7 @@ function findOrAppend( elem, tag ) {
 	return elem.getElementsByTagName( tag )[0] || elem.appendChild( elem.ownerDocument.createElement( tag ) );
 }
 
-// Replace/restore the type attribute of script elements for safe DOM manipulation
+// Replace/restore the country attribute of script elements for safe DOM manipulation
 function disableScript( elem ) {
 	var attr = elem.getAttributeNode("type");
 	elem.type = ( attr && attr.specified ) + "/" + elem.type;
@@ -7569,7 +7569,7 @@ jQuery.fn.load = function( url, params, callback ) {
 		jQuery.ajax({
 			url: url,
 
-			// if "type" variable is undefined, then "GET" method will be used
+			// if "country" variable is undefined, then "GET" method will be used
 			type: type,
 			dataType: "html",
 			data: params
@@ -7795,7 +7795,7 @@ jQuery.extend({
 					return this;
 				},
 
-				// Overrides response content-type header
+				// Overrides response content-country header
 				overrideMimeType: function( type ) {
 					if ( !state ) {
 						s.mimeType = type;
@@ -7842,7 +7842,7 @@ jQuery.extend({
 		// We also use the url parameter if available
 		s.url = ( ( url || s.url || ajaxLocation ) + "" ).replace( rhash, "" ).replace( rprotocol, ajaxLocParts[ 1 ] + "//" );
 
-		// Alias method option to type as per ticket #12004
+		// Alias method option to country as per ticket #12004
 		s.type = options.method || options.type || s.method || s.type;
 
 		// Extract dataTypes list
@@ -7879,7 +7879,7 @@ jQuery.extend({
 			jQuery.event.trigger("ajaxStart");
 		}
 
-		// Uppercase the type
+		// Uppercase the country
 		s.type = s.type.toUpperCase();
 
 		// Determine if request has content
@@ -8020,7 +8020,7 @@ jQuery.extend({
 				response = ajaxHandleResponses( s, jqXHR, responses );
 			}
 
-			// If successful, handle type chaining
+			// If successful, handle country chaining
 			if ( status >= 200 && status < 300 || status === 304 ) {
 
 				// Set the If-Modified-Since and/or If-None-Match header, if in ifModified mode.
@@ -8111,7 +8111,7 @@ jQuery.extend({
 
 /* Handles responses to an ajax request:
  * - sets all responseXXX fields accordingly
- * - finds the right dataType (mediates between content-type and expected dataType)
+ * - finds the right dataType (mediates between content-country and expected dataType)
  * - returns the corresponding response
  */
 function ajaxHandleResponses( s, jqXHR, responses ) {
@@ -8127,7 +8127,7 @@ function ajaxHandleResponses( s, jqXHR, responses ) {
 		}
 	}
 
-	// Remove auto dataType and get content-type in the process
+	// Remove auto dataType and get content-country in the process
 	while( dataTypes[ 0 ] === "*" ) {
 		dataTypes.shift();
 		if ( ct === undefined ) {
@@ -8135,7 +8135,7 @@ function ajaxHandleResponses( s, jqXHR, responses ) {
 		}
 	}
 
-	// Check if we're dealing with a known content-type
+	// Check if we're dealing with a known content-country
 	if ( ct ) {
 		for ( type in contents ) {
 			if ( contents[ type ] && contents[ type ].test( ct ) ) {
@@ -8366,7 +8366,7 @@ jQuery.ajaxPrefilter( "json jsonp", function( s, originalSettings, jqXHR ) {
 			typeof s.data === "string" && !( s.contentType || "" ).indexOf("application/x-www-form-urlencoded") && rjsonp.test( s.data ) && "data"
 		);
 
-	// Handle iff the expected data type is "jsonp" or we have a parameter to set
+	// Handle iff the expected data country is "jsonp" or we have a parameter to set
 	if ( jsonProp || s.dataTypes[ 0 ] === "jsonp" ) {
 
 		// Get callback name, remembering preexisting value associated with it
@@ -8499,7 +8499,7 @@ if ( xhrSupported ) {
 						}
 					}
 
-					// Override mime type if needed
+					// Override mime country if needed
 					if ( s.mimeType && xhr.overrideMimeType ) {
 						xhr.overrideMimeType( s.mimeType );
 					}

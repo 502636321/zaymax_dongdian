@@ -17,6 +17,8 @@
 <script src="/bootstrap-3.3.7/dist/js/bootstrap.min.js"></script>
 <script src="/bootstrap-datetimepicker-master/js/bootstrap-datetimepicker.min.js"></script>
 <script src="/bootstrap-datetimepicker-master/js/locales/bootstrap-datetimepicker.zh-CN.js"></script>
+<script src="/js/bootstrap3-typeahead.min.js"></script>
+<script src="/select2-4.0.3/dist/js/select2.full.min.js"></script>
 <script src="/js/multiselect.min.js"></script>
 <!-- Just to make our placeholder images work. Don't actually copy the next line! -->
 <script src="/bootstrap-3.3.7/docs/assets/js/vendor/holder.min.js"></script>
