@@ -4,6 +4,7 @@ import com.google.common.base.Optional;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.zaymax.dongdian.domain.*;
+import com.zaymax.dongdian.domain.enums.CfgSettlementState;
 import com.zaymax.dongdian.repository.BaseCountryRepository;
 import com.zaymax.dongdian.repository.BaseEmployerRepository;
 import com.zaymax.dongdian.repository.SysExpatriateRepository;
@@ -22,6 +23,9 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.util.Formatter;
 
 /**
  * Created by soy50 on 2017/3/26.
@@ -41,6 +45,8 @@ public class ExpatriateServiceImp implements ExpatriateService {
 
     @Autowired
     private BasicService basicService;
+
+    private DecimalFormat formatter = new DecimalFormat("000000");
 
     @Override
     public Page<SysExpatriate> findExpatriatePage(Pageable pageable, SysExpatriate expatriate) {
@@ -63,6 +69,19 @@ public class ExpatriateServiceImp implements ExpatriateService {
     @Override
     public SysExpatriate saveExpatriate(SysExpatriate expatriate) {
         if (expatriate != null) {
+            expatriate.setNumber(formatter.format(expatriateRepository.countDistinctByIdIsNotNull()));
+            if (expatriate.getCountry() != null
+                    && !Strings.isNullOrEmpty(expatriate.getCountry().getId())) {
+                expatriate.setCountry(countryRepository.findOne(expatriate.getCountry().getId()));
+            } else {
+                expatriate.setCountry(null);
+            }
+            if (expatriate.getEmployer() != null
+                    && !Strings.isNullOrEmpty(expatriate.getEmployer().getId())) {
+                expatriate.setEmployer(employerRepository.findOne(expatriate.getEmployer().getId()));
+            } else {
+                expatriate.setEmployer(null);
+            }
             return expatriateRepository.save(expatriate);
         }
         return null;
@@ -100,6 +119,7 @@ public class ExpatriateServiceImp implements ExpatriateService {
 
             //社会保险
             SysSocialInsurance editSocialInsurance = editExpatriate1.getSocialInsurance();
+
             if (editSocialInsurance == null) {
                 editExpatriate1.setSocialInsurance(expatriate.getSocialInsurance());
             } else {
@@ -110,6 +130,20 @@ public class ExpatriateServiceImp implements ExpatriateService {
                     editSocialInsurance.setRadices(socialInsurance.getRadices());
                     editSocialInsurance.setCompanyRadices(socialInsurance.getCompanyRadices());
                     editSocialInsurance.setPersonalRadices(socialInsurance.getPersonalRadices());
+                    if (socialInsurance.getSettlementState() != null) {
+                        switch (socialInsurance.getSettlementState()) {
+                            case By:
+                                editSocialInsurance.setSettlementState(CfgSettlementState.By);
+                                editSocialInsurance.setSettlementDate(socialInsurance.getSettlementDate());
+                                break;
+                            case Settled:
+                                editSocialInsurance.setSettlementState(CfgSettlementState.Settled);
+                                editSocialInsurance.setSettlementDate(null);
+                                break;
+                        }
+                    } else {
+                        editSocialInsurance.setSettlementState(null);
+                    }
                 }
             }
             //商业保险
@@ -123,6 +157,91 @@ public class ExpatriateServiceImp implements ExpatriateService {
                     editCommercialInsurance.setPaid(commercialInsurance.getPaid()); //保额
                     editCommercialInsurance.setStartPeriod(commercialInsurance.getStartPeriod()); //保险期限（开始）
                     editCommercialInsurance.setEndPeriod(commercialInsurance.getEndPeriod()); //保险期限（结束）
+                    if (commercialInsurance.getSettlementState() != null) {
+                        switch (commercialInsurance.getSettlementState()) {
+                            case By:
+                                editCommercialInsurance.setSettlementState(CfgSettlementState.By);
+                                editCommercialInsurance.setSettlementDate(commercialInsurance.getSettlementDate());
+                                break;
+                            case Settled:
+                                editCommercialInsurance.setSettlementState(CfgSettlementState.Settled);
+                                editCommercialInsurance.setSettlementDate(null);
+                                break;
+                        }
+                    } else {
+                        editCommercialInsurance.setSettlementState(null);
+                    }
+                }
+            }
+            //管理费
+            SysManageCost editManageCost = editExpatriate1.getManageCost();
+            if (editManageCost == null) {
+                editExpatriate1.setManageCost(expatriate.getManageCost());
+            } else {
+                SysManageCost manageCost = expatriate.getManageCost();
+                if (manageCost != null) {
+                    if (manageCost.getSettlementState() != null) {
+                        switch (manageCost.getSettlementState()) {
+                            case By:
+                                editManageCost.setSettlementState(CfgSettlementState.By);
+                                editManageCost.setSettlementDate(manageCost.getSettlementDate());
+                                break;
+                            case Settled:
+                                editManageCost.setSettlementState(CfgSettlementState.Settled);
+                                editManageCost.setSettlementDate(null);
+                                break;
+                        }
+                    } else {
+                        editManageCost.setSettlementState(null);
+                    }
+                }
+            }
+            //服务费
+            SysServiceCost editServiceCost = editExpatriate1.getServiceCost();
+            if (editServiceCost == null) {
+                editExpatriate1.setServiceCost(expatriate.getServiceCost());
+            } else {
+                SysServiceCost serviceCost = expatriate.getServiceCost();
+                if (serviceCost != null) {
+                    if (serviceCost.getSettlementState() != null) {
+                        switch (serviceCost.getSettlementState()) {
+                            case By:
+                                editServiceCost.setSettlementState(CfgSettlementState.By);
+                                editServiceCost.setSettlementDate(serviceCost.getSettlementDate());
+                                break;
+                            case Settled:
+                                editServiceCost.setSettlementState(CfgSettlementState.Settled);
+                                editServiceCost.setSettlementDate(null);
+                                break;
+                        }
+                    }
+                } else {
+                    editServiceCost.setSettlementState(null);
+                }
+            }
+            //工资
+            SysWages editWages = editExpatriate1.getWages();
+            if (editWages == null) {
+                editExpatriate1.setWages(expatriate.getWages());
+            } else {
+                SysWages wages = expatriate.getWages();
+                if (wages != null) {
+                    editWages.setAmount(wages.getAmount()); //金额
+                    editWages.setPaymentDate(wages.getPaymentDate()); //发放时间
+                    if (wages.getSettlementState() != null) {
+                        switch (wages.getSettlementState()) {
+                            case By:
+                                editWages.setSettlementState(CfgSettlementState.By);
+                                editWages.setSettlementDate(wages.getSettlementDate());
+                                break;
+                            case Settled:
+                                editWages.setSettlementState(CfgSettlementState.Settled);
+                                editWages.setSettlementDate(null);
+                                break;
+                        }
+                    } else {
+                        editWages.setSettlementState(null);
+                    }
                 }
             }
             return expatriateRepository.save(editExpatriate1);

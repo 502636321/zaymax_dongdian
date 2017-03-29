@@ -1,5 +1,6 @@
 package com.zaymax.dongdian.domain;
 
+import com.zaymax.dongdian.domain.enums.CfgSettlementState;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.Column;
@@ -46,6 +47,19 @@ public class SysSocialInsurance extends BaseDomain {
     @Column(name = "PERSONAL_RADICES")
     private Double personalRadices;
 
+    /**
+     * 结算状态
+     */
+    @Column(name = "SETTLEMENT_STATE")
+    private CfgSettlementState settlementState;
+
+    /**
+     * 截至日期
+     */
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @Column(name = "SETTLEMENT_DATE")
+    private Date settlementDate;
+
     public Date getInsuranceDate() {
         return insuranceDate;
     }
@@ -84,5 +98,21 @@ public class SysSocialInsurance extends BaseDomain {
 
     public void setPersonalRadices(Double personalRadices) {
         this.personalRadices = personalRadices;
+    }
+
+    public CfgSettlementState getSettlementState() {
+        return settlementState;
+    }
+
+    public void setSettlementState(CfgSettlementState settlementState) {
+        this.settlementState = settlementState;
+    }
+
+    public Date getSettlementDate() {
+        return settlementDate;
+    }
+
+    public void setSettlementDate(Date settlementDate) {
+        this.settlementDate = settlementDate;
     }
 }

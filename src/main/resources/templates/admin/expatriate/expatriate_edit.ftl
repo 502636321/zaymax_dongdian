@@ -27,10 +27,17 @@
                 }
             });
         });
+        function disabledSettlementDate(_self, s) {
+            if ('By' == $(_self).val()) {
+                $(s).show();
+            } else {
+                $(s).hide();
+            }
+        }
     </script>
 </head>
 
-<body class="main-body">
+<body class="main-body" >
 
 <#include "../public/navbar_header.ftl" />
 
@@ -100,7 +107,7 @@
                             <label for="number" class="col-md-2 control-label"><@spring.message code="expatriate_attribute_contract_period" /></label>
                             <div class="col-md-3">
                                 <select name="contractPeriod" class="form-control" >
-                                    <option><@spring.message code="select_default_option" /></option>
+                                    <option value="" ><@spring.message code="select_default_option" /></option>
                                     <#list 1..60 as i >
                                         <option value="${ i }" ${ ((expatriate.contractPeriod==i)!false)?string("selected=\"selected\"", "") } >${ i }</option>
                                     </#list>
@@ -128,7 +135,7 @@
                             </div>
                         </div>
                         <fieldset>
-                            <legend>社会保险</legend>
+                            <legend><@spring.message code="social_insurance_index" /></legend>
                             <div class="form-group">
                                 <label for="insuranceDate" class="col-md-2 control-label"><@spring.message code="social_insurance_attribute_insurance_date" /></label>
                                 <div class="col-md-3">
@@ -158,6 +165,21 @@
                                 <div class="col-md-3">
                                 </div>
                             </div>
+                            <div class="form-group">
+                                <label for="socialInsurance.settlementState" class="col-md-2 control-label"><@spring.message code="social_insurance_attribute_settlement_state" /></label>
+                                <div class="col-md-3">
+                                    <select name="socialInsurance.settlementState" class="form-control" onchange="disabledSettlementDate(this, '.socialInsurance_settlementDate')" >
+                                        <option value=""></option>
+                                        <#list settlementes as settlement >
+                                            <option value="${ settlement.name() }" ${ ((expatriate.socialInsurance.settlementState==settlement)!false)?string("selected=\"selected\"", "") } ><@spring.message code="${ settlement!'blank' }" arguments="" /></option>
+                                        </#list>
+                                    </select>
+                                </div>
+                                <label for="socialInsurance.settlementDate" class="col-md-2 control-label socialInsurance_settlementDate" style="${ ((expatriate.socialInsurance.settlementState.ordinal()==0)!true)?string("display: none;", "") }"><@spring.message code="social_insurance_attribute_settlement_date" /></label>
+                                <div class="col-md-3 socialInsurance_settlementDate" style="${ ((expatriate.socialInsurance.settlementState.ordinal()==0)!true)?string("display: none;", "") }">
+                                    <input type="text" class="form-control form_datetime" id="socialInsurance.settlementDate" name="socialInsurance.settlementDate" readonly value="${ (expatriate.socialInsurance.settlementDate?string("yyyy-MM-dd"))!"" }" >
+                                </div>
+                            </div>
                         </fieldset>
                         <fieldset>
                             <legend><@spring.message code="commercial_insurance_index" /></legend>
@@ -179,6 +201,85 @@
                                 <label for="endPeriod" class="col-md-2 control-label"><@spring.message code="commercial_insurance_attribute_end_period" /></label>
                                 <div class="col-md-3">
                                     <input type="text" class="form-control form_datetime" id="endPeriod" name="commercialInsurance.endPeriod" readonly value="${ (expatriate.commercialInsurance.endPeriod?string("yyyy-MM-dd"))!"" }" >
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="commercialInsurance.settlementState" class="col-md-2 control-label"><@spring.message code="commercial_insurance_attribute_settlement_state" /></label>
+                                <div class="col-md-3">
+                                    <select name="commercialInsurance.settlementState" class="form-control" onchange="disabledSettlementDate(this, '.commercialInsurance_settlementDate')" >
+                                        <option value=""></option>
+                                    <#list settlementes as settlement >
+                                        <option value="${ settlement.name() }" ${ ((expatriate.commercialInsurance.settlementState==settlement)!false)?string("selected=\"selected\"", "") } ><@spring.message code="${ settlement!'blank' }" /></option>
+                                    </#list>
+                                    </select>
+                                </div>
+                                <label for="commercialInsurance.settlementDate" class="col-md-2 control-label commercialInsurance_settlementDate" style="${ ((expatriate.commercialInsurance.settlementState.ordinal()==0)!true)?string("display: none;", "") }"><@spring.message code="commercial_insurance_attribute_settlement_date" /></label>
+                                <div class="col-md-3 commercialInsurance_settlementDate" style="${ ((expatriate.commercialInsurance.settlementState.ordinal()==0)!true)?string("display: none;", "") }">
+                                    <input type="text" class="form-control form_datetime" id="commercialInsurance.settlementDate" name="commercialInsurance.settlementDate" readonly value="${ (expatriate.commercialInsurance.settlementDate?string("yyyy-MM-dd"))!"" }" >
+                                </div>
+                            </div>
+                        </fieldset>
+                        <fieldset>
+                            <legend><@spring.message code="wages_index" /></legend>
+                            <div class="form-group">
+                                <label for="wages.amount" class="col-md-2 control-label"><@spring.message code="wages_attribute_amount" /></label>
+                                <div class="col-md-3">
+                                    <input type="text" class="form-control" id="wages.amount" name="wages.amount" value="${ ((expatriate.wages.amount)!0)?string("#") }" >
+                                </div>
+                                <label for="wages.paymentDate" class="col-md-2 control-label"><@spring.message code="wages_attribute_payment_date" /></label>
+                                <div class="col-md-3">
+                                    <input type="text" class="form-control form_datetime" id="wages.paymentDate" name="wages.paymentDate" readonly value="${ (expatriate.wages.paymentDate?string("yyyy-MM-dd"))!"" }" >
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="wages.settlementState" class="col-md-2 control-label"><@spring.message code="wages_attribute_settlement_state" /></label>
+                                <div class="col-md-3">
+                                    <select name="wages.settlementState" class="form-control" onchange="disabledSettlementDate(this, '.wages_settlementDate')" >
+                                        <option value=""></option>
+                                    <#list settlementes as settlement >
+                                        <option value="${ settlement.name() }" ${ ((expatriate.wages.settlementState==settlement)!false)?string("selected=\"selected\"", "") } ><@spring.message code="${ settlement!'blank' }" /></option>
+                                    </#list>
+                                    </select>
+                                </div>
+                                <label for="wages.settlementDate" class="col-md-2 control-label wages_settlementDate" style="${ ((expatriate.wages.settlementState.ordinal()==0)!true)?string("display: none;", "") }"><@spring.message code="wages_attribute_settlement_date" /></label>
+                                <div class="col-md-3 wages_settlementDate" style="${ ((expatriate.wages.settlementState.ordinal()==0)!true)?string("display: none;", "") }">
+                                    <input type="text" class="form-control form_datetime" id="wages.settlementDate" name="wages.settlementDate" readonly value="${ (expatriate.wages.settlementDate?string("yyyy-MM-dd"))!"" }" >
+                                </div>
+                            </div>
+                        </fieldset>
+                        <fieldset>
+                            <legend><@spring.message code="manage_cost_index" /></legend>
+                            <div class="form-group">
+                                <label for="manageCost.settlementState" class="col-md-2 control-label"><@spring.message code="manage_cost_attribute_settlement_state" /></label>
+                                <div class="col-md-3">
+                                    <select name="manageCost.settlementState" class="form-control" onchange="disabledSettlementDate(this, '.manageCost_settlementDate')" >
+                                        <option value=""></option>
+                                    <#list settlementes as settlement >
+                                        <option value="${ settlement.name() }" ${ ((expatriate.manageCost.settlementState==settlement)!false)?string("selected=\"selected\"", "") } ><@spring.message code="${ settlement!'blank' }" /></option>
+                                    </#list>
+                                    </select>
+                                </div>
+                                <label for="manageCost.settlementDate" class="col-md-2 control-label manageCost_settlementDate" style="${ ((expatriate.manageCost.settlementState.ordinal()==0)!true)?string("display: none;", "") }"><@spring.message code="manage_cost_attribute_settlement_date" /></label>
+                                <div class="col-md-3 manageCost_settlementDate" style="${ ((expatriate.manageCost.settlementState.ordinal()==0)!true)?string("display: none;", "") }">
+                                    <input type="text" class="form-control form_datetime" id="manageCost.settlementDate" name="manageCost.settlementDate" readonly value="${ (expatriate.manageCost.settlementDate?string("yyyy-MM-dd"))!"" }" >
+                                </div>
+                            </div>
+                        </fieldset>
+                        <fieldset>
+                            <legend><@spring.message code="service_cost_index" /></legend>
+                            <div class="form-group">
+                                <label for="serviceCost.settlementState" class="col-md-2 control-label"><@spring.message code="service_cost_attribute_settlement_state" /></label>
+                                <div class="col-md-3">
+                                    <select name="serviceCost.settlementState" class="form-control" onchange="disabledSettlementDate(this, '.serviceCost_settlementDate')" >
+                                        <option value=""></option>
+                                    <#list settlementes as settlement >
+                                        <option value="${ settlement.name() }" ${ ((expatriate.serviceCost.settlementState==settlement)!false)?string("selected=\"selected\"", "") } ><@spring.message code="${ settlement!'blank' }" /></option>
+                                    </#list>
+                                    </select>
+                                </div>
+                                <label for="manageCost.serviceCost" class="col-md-2 control-label serviceCost_settlementDate" style="${ ((expatriate.serviceCost.settlementState.ordinal()==0)!true)?string("display: none;", "") }"><@spring.message code="service_cost_attribute_settlement_date" /></label>
+                                <div class="col-md-3 serviceCost_settlementDate" style="${ ((expatriate.serviceCost.settlementState.ordinal()==0)!true)?string("display: none;", "") }">
+                                    <input type="text" class="form-control form_datetime" id="serviceCost.settlementDate" name="serviceCost.settlementDate" readonly value="${ (expatriate.serviceCost.settlementDate?string("yyyy-MM-dd"))!"" }" >
                                 </div>
                             </div>
                         </fieldset>

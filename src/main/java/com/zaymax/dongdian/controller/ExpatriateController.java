@@ -4,6 +4,7 @@ import com.zaymax.dongdian.domain.BaseCountry;
 import com.zaymax.dongdian.domain.BaseEmployer;
 import com.zaymax.dongdian.domain.SysExpatriate;
 import com.zaymax.dongdian.domain.enums.CfgGender;
+import com.zaymax.dongdian.domain.enums.CfgSettlementState;
 import com.zaymax.dongdian.service.BasicService;
 import com.zaymax.dongdian.service.ExpatriateService;
 import org.slf4j.Logger;
@@ -50,7 +51,7 @@ public class ExpatriateController extends BaseController {
             @ModelAttribute(name = "expatriate") SysExpatriate expatriate,
             Model model
     ) {
-        LOGGER.debug("进入学历主页");
+        LOGGER.debug("进入外派人员主页");
         Page<SysExpatriate> expatriatePage = expatriateService.findExpatriatePage(new PageRequest(page, size, new Sort(Sort.Direction.DESC, sort)), expatriate);
         model.addAttribute("expatriatePage", expatriatePage);
         return "admin/expatriate/expatriate_index";
@@ -72,8 +73,14 @@ public class ExpatriateController extends BaseController {
      * @return
      */
     @GetMapping(value = {"expatriate/save", "save"})
-    public String saveExpatriate() {
+    public String saveExpatriate(
+            Model model
+    ) {
         LOGGER.debug("进入外派人员增加界面");
+        model.addAttribute("genders", CfgGender.values());
+        model.addAttribute("settlementes", CfgSettlementState.values());
+        model.addAttribute("countries", basicService.findAllCountry());
+        model.addAttribute("employers", basicService.findAllEmployer());
         return "admin/expatriate/expatriate_save";
     }
 
@@ -95,6 +102,10 @@ public class ExpatriateController extends BaseController {
         } else {
             setSuccessMessage(model, "expatriate_action_save_error");
         }
+        model.addAttribute("genders", CfgGender.values());
+        model.addAttribute("settlementes", CfgSettlementState.values());
+        model.addAttribute("countries", basicService.findAllCountry());
+        model.addAttribute("employers", basicService.findAllEmployer());
         return "admin/expatriate/expatriate_save";
     }
 
@@ -113,8 +124,10 @@ public class ExpatriateController extends BaseController {
         SysExpatriate expatriate = expatriateService.findExpatriate(id);
         model.addAttribute("expatriate", expatriate);
         model.addAttribute("genders", CfgGender.values());
+        model.addAttribute("settlementes", CfgSettlementState.values());
         model.addAttribute("countries", basicService.findAllCountry());
         model.addAttribute("employers", basicService.findAllEmployer());
+
         return "admin/expatriate/expatriate_edit";
     }
 
@@ -140,6 +153,7 @@ public class ExpatriateController extends BaseController {
             setErrorMessage(model, "expatriate_action_edit_error");
         }
         model.addAttribute("genders", CfgGender.values());
+        model.addAttribute("settlementes", CfgSettlementState.values());
         model.addAttribute("countries", basicService.findAllCountry());
         model.addAttribute("employers", basicService.findAllEmployer());
         return "admin/expatriate/expatriate_edit";
@@ -164,7 +178,7 @@ public class ExpatriateController extends BaseController {
             @ModelAttribute(name = "expatriate") SysExpatriate expatriate,
             Model model
     ) {
-        LOGGER.debug("根据ID[{}]删除学历", id);
+        LOGGER.debug("根据ID[{}]删除外派人员", id);
         int count = expatriateService.deleteExpatriate(id);
         SysExpatriate deleteExpatriate = expatriateService.findExpatriate(id);
         if (count > 0) {
@@ -186,9 +200,13 @@ public class ExpatriateController extends BaseController {
             @PathVariable String id,
             Model model
     ) {
-        LOGGER.debug("根据ID[{}]显示学历", id);
+        LOGGER.debug("根据ID[{}]显示外派人员", id);
         SysExpatriate expatriate = expatriateService.findExpatriate(id);
         model.addAttribute("expatriate", expatriate);
+        model.addAttribute("genders", CfgGender.values());
+        model.addAttribute("settlementes", CfgSettlementState.values());
+        model.addAttribute("countries", basicService.findAllCountry());
+        model.addAttribute("employers", basicService.findAllEmployer());
         return "admin/expatriate/expatriate_show";
     }
 }

@@ -98,6 +98,24 @@ public class SysExpatriate extends BaseDomain {
     @JoinColumn(name = "COMMERCIAL_INSURANCE_ID")
     private SysCommercialInsurance commercialInsurance;
 
+    /**
+     * 管理费
+     */
+    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST})
+    @JoinColumn(name = "MANAGE_COST_ID")
+    private SysManageCost manageCost;
+
+    /**
+     * 服务费
+     */
+    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST})
+    @JoinColumn(name = "SERVICE_COST_ID")
+    private SysServiceCost serviceCost;
+
+    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST})
+    @JoinColumn(name = "WAGES_ID")
+    private SysWages wages;
+
     public String getNumber() {
         return number;
     }
@@ -200,5 +218,29 @@ public class SysExpatriate extends BaseDomain {
 
     public void setCommercialInsurance(SysCommercialInsurance commercialInsurance) {
         this.commercialInsurance = commercialInsurance;
+    }
+
+    public SysManageCost getManageCost() {
+        return manageCost;
+    }
+
+    public void setManageCost(SysManageCost manageCost) {
+        this.manageCost = manageCost;
+    }
+
+    public SysServiceCost getServiceCost() {
+        return serviceCost;
+    }
+
+    public void setServiceCost(SysServiceCost serviceCost) {
+        this.serviceCost = serviceCost;
+    }
+
+    public SysWages getWages() {
+        return wages;
+    }
+
+    public void setWages(SysWages wages) {
+        this.wages = wages;
     }
 }
