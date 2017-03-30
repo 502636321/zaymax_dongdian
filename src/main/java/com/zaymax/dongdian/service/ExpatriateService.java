@@ -7,6 +7,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.ServletOutputStream;
+
 /**
  * Created by soy50 on 2017/3/26.
  */
@@ -48,4 +50,6 @@ public interface ExpatriateService {
     @Transactional
     int deleteExpatriate(String id);
 
+    @Transactional(readOnly = true)
+    void exportExpatriate(ServletOutputStream outputStream, SysExpatriate expatriate);
 }

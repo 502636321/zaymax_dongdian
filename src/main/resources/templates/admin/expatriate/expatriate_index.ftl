@@ -4,6 +4,11 @@
     <#include "../public/meta.ftl" />
     <#include "../public/stylesheet.ftl" />
     <#include "../public/script.ftl" />
+    <script>
+        function printTable() {
+            $('#expatriate_table').printThis();
+        }
+    </script>
 </head>
 
 <body class="main-body">
@@ -18,9 +23,14 @@
             <div class="panel panel-default">
                 <!-- Default panel contents -->
                 <div class="panel-heading clearfix">
-                    <a class="pull-right btn btn-primary" href="/save" >
-                        <i class="glyphicon glyphicon-plus"></i><@spring.message code="button_add" />
-                    </a>
+                    <div class="btn-group pull-right" role="group" aria-label="Basic example">
+                        <a class="btn btn-primary" href="/save" >
+                            <i class="glyphicon glyphicon-plus"></i><@spring.message code="button_add" />
+                        </a>
+                        <a class="btn btn-success" href="/export?name=${ (expatriate.name)!"" }" target="_blank" >
+                            <i class="glyphicon glyphicon-export"></i><@spring.message code="button_export" />
+                        </a>
+                    </div>
                     <form method="post" action="/admin/basic/country" >
                         <input type="hidden" name="${ _csrf.parameterName }" value="${ _csrf.token }"/>
                         <div class="input-group pull-left col-md-3 col-xs-4">
@@ -37,7 +47,7 @@
 
                 <!-- Table -->
                 <div class="table-responsive" style="white-space: nowrap;" >
-                <table class="table table-bordered" fixed-header>
+                <table class="table table-bordered" id="expatriate_table">
                     <thead>
                     <tr>
                         <th class="col-md-1" rowspan="2"><@spring.message code="expatriate_attribute_number" /></th>
@@ -78,7 +88,7 @@
                     <tbody>
                     <#list expatriatePage.content as expatriate >
                     <tr>
-                        <td><a href="/show/${ (expatriate.id)!"" }">${ (expatriate.number)!"" }</a></td>
+                        <td><a href="/show/${ (expatriate.id)!"" }" class="hide-for-print">${ (expatriate.number)!"" }</a></td>
                         <td>${ (expatriate.name)!"" }</td>
                         <td><@spring.message code="${ (expatriate.gender)!'blank' }" /></td>
                         <td>${ (expatriate.cardNO)!"" }</td>

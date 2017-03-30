@@ -1,5 +1,6 @@
 package com.zaymax.dongdian.controller;
 
+import com.google.common.base.Charsets;
 import com.zaymax.dongdian.domain.BaseCountry;
 import com.zaymax.dongdian.domain.BaseEmployer;
 import com.zaymax.dongdian.domain.SysExpatriate;
@@ -7,6 +8,7 @@ import com.zaymax.dongdian.domain.enums.CfgGender;
 import com.zaymax.dongdian.domain.enums.CfgSettlementState;
 import com.zaymax.dongdian.service.BasicService;
 import com.zaymax.dongdian.service.ExpatriateService;
+import org.apache.commons.lang3.time.DateFormatUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +19,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.net.URLEncoder;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -208,5 +214,22 @@ public class ExpatriateController extends BaseController {
         model.addAttribute("countries", basicService.findAllCountry());
         model.addAttribute("employers", basicService.findAllEmployer());
         return "admin/expatriate/expatriate_show";
+    }
+
+    @RequestMapping(value = {"export"})
+    public void exportExpatriate(
+            @RequestParam(defaultValue = PAGE_REQUEST_PAGE, required = false) int page,
+            @RequestParam(defaultValue = PAGE_REQUEST_SIZE, required = false) int size,
+            @RequestParam(defaultValue = PAGE_REQUEST_SORT, required = false) String sort,
+            @ModelAttribute(name = "expatriate") SysExpatriate expatriate,
+            HttpServletResponse response
+    ) {
+        try {
+            response.setContentType("application/force-download");// 设置强制下载不打开
+            response.addHeader("Content-Disposition", "attachment;fileName=" + DateFormatUtils.format(new Date(), "yyyyMMddHHmmss") + ".xlsx");
+            expatriateService.exportExpatriate(response.getOutputStream(), expatriate);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

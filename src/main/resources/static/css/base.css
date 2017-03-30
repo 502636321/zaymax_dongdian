@@ -149,3 +149,7 @@
     display: inline-block;
     border-radius: 50%;
 }
+
+@media print {
+    .hide-for-print { display: none !important; }
+}

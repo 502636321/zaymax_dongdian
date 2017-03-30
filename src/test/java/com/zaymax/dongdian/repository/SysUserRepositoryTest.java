@@ -51,7 +51,5 @@ public class SysUserRepositoryTest extends ZaymaxDongdianApplicationTests {
 
     @Test
     public void findOne() throws Exception {
-        SysUser user = userRepository.findOne("402881e75b0b3104015b0b311d180000");
-        System.out.println(user.getLocked());
     }
 }

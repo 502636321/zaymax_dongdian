@@ -11,10 +11,18 @@ import com.zaymax.dongdian.repository.SysExpatriateRepository;
 import com.zaymax.dongdian.service.BasicService;
 import com.zaymax.dongdian.service.ExpatriateService;
 import com.zaymax.dongdian.service.SystemService;
+import org.apache.commons.lang3.time.DateFormatUtils;
+import org.apache.commons.lang3.time.DateUtils;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -23,6 +31,8 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import javax.servlet.ServletOutputStream;
+import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.Formatter;
@@ -45,6 +55,9 @@ public class ExpatriateServiceImp implements ExpatriateService {
 
     @Autowired
     private BasicService basicService;
+
+    @Autowired
+    private MessageSource messageSource;
 
     private DecimalFormat formatter = new DecimalFormat("000000");
 
@@ -198,6 +211,7 @@ public class ExpatriateServiceImp implements ExpatriateService {
             }
             //服务费
             SysServiceCost editServiceCost = editExpatriate1.getServiceCost();
+
             if (editServiceCost == null) {
                 editExpatriate1.setServiceCost(expatriate.getServiceCost());
             } else {
@@ -214,9 +228,9 @@ public class ExpatriateServiceImp implements ExpatriateService {
                                 editServiceCost.setSettlementDate(null);
                                 break;
                         }
+                    } else {
+                        editServiceCost.setSettlementState(null);
                     }
-                } else {
-                    editServiceCost.setSettlementState(null);
                 }
             }
             //工资
@@ -255,6 +269,81 @@ public class ExpatriateServiceImp implements ExpatriateService {
             return expatriateRepository.delete(Lists.newArrayList(id));
         }
         return 0;
+    }
+
+    @Override
+    public void exportExpatriate(ServletOutputStream outputStream, SysExpatriate expatriate) {
+        HSSFWorkbook workbook = new HSSFWorkbook();
+        HSSFSheet sheet = workbook.createSheet();
+        final int[] rowIndex = {0};
+        findExpatriatePage(new PageRequest(0, Integer.MAX_VALUE), expatriate).getContent().forEach(sysExpatriate -> {
+            HSSFRow row = sheet.createRow(rowIndex[0]++);
+            row.createCell(0).setCellValue(sysExpatriate.getNumber());
+            row.createCell(1).setCellValue(sysExpatriate.getName());
+            row.createCell(2).setCellValue(messageSource.getMessage(sysExpatriate.getGender() != null ? sysExpatriate.getGender().toString() : "blank", null, LocaleContextHolder.getLocale()));
+            row.createCell(3).setCellValue(sysExpatriate.getCardNO() != null ? sysExpatriate.getCardNO() : "");
+            row.createCell(4).setCellValue(sysExpatriate.getCountry() != null ? sysExpatriate.getCountry().getName() : "");
+            row.createCell(5).setCellValue(sysExpatriate.getExpatriateDate() != null ? DateFormatUtils.format(sysExpatriate.getExpatriateDate(), "yyyy-MM-dd") : "");
+            row.createCell(6).setCellValue(sysExpatriate.getContractPeriod() != null ? sysExpatriate.getContractPeriod() : 0);
+            row.createCell(7).setCellValue(sysExpatriate.getEmployer() != null ? sysExpatriate.getEmployer().getName() : "");
+            //社会保险
+            SysSocialInsurance socialInsurance = sysExpatriate.getSocialInsurance();
+            row.createCell(8).setCellValue((socialInsurance != null && socialInsurance.getInsuranceDate() != null) ? DateFormatUtils.format(socialInsurance.getInsuranceDate(), "yyyy-MM-dd") : "");
+            row.createCell(9).setCellValue((socialInsurance != null && socialInsurance.getPersonalCode() != null) ? socialInsurance.getPersonalCode() : "");
+            row.createCell(10).setCellValue((socialInsurance != null && socialInsurance.getRadices() != null) ? socialInsurance.getRadices() : 0);
+            row.createCell(11).setCellValue((socialInsurance != null && socialInsurance.getCompanyRadices() != null) ? socialInsurance.getCompanyRadices() : 0);
+            row.createCell(12).setCellValue((socialInsurance != null && socialInsurance.getPersonalRadices() != null) ? socialInsurance.getPersonalRadices() : 0);
+
+            //商业保险
+            SysCommercialInsurance commercialInsurance = sysExpatriate.getCommercialInsurance();
+            row.createCell(13).setCellValue((commercialInsurance != null && commercialInsurance.getPremium() != null ) ? commercialInsurance.getPremium(): 0);
+            row.createCell(14).setCellValue((commercialInsurance != null && commercialInsurance.getPaid() != null ) ? commercialInsurance.getPaid() : 0);
+            row.createCell(15).setCellValue(
+                    (commercialInsurance != null) ? (
+                    (commercialInsurance.getStartPeriod() != null ? (DateFormatUtils.format(commercialInsurance.getStartPeriod(), "yyyy-MM-dd")) : "") +
+                    "-" +
+                    (commercialInsurance.getEndPeriod() != null ? (DateFormatUtils.format(commercialInsurance.getEndPeriod(), "yyyy-MM-dd")) : "")
+                    ) : ""
+            );
+            //工资
+            SysWages wages = sysExpatriate.getWages();
+            row.createCell(16).setCellValue((wages != null && wages.getPaymentDate() != null) ? (DateFormatUtils.format(wages.getPaymentDate(), "yyyy-MM-dd")) : "");
+            row.createCell(17).setCellValue((wages != null && wages.getAmount() != null) ? wages.getAmount() : 0);
+
+            //费用结算
+            row.createCell(18).setCellValue((socialInsurance != null && socialInsurance.getSettlementState() != null) ? (
+                    socialInsurance.getSettlementState().equals(CfgSettlementState.Settled) ?
+                            messageSource.getMessage(CfgSettlementState.Settled.toString(), null, LocaleContextHolder.getLocale()) :
+                            messageSource.getMessage(CfgSettlementState.By.toString(), new Object[] { socialInsurance.getSettlementDate() }, LocaleContextHolder.getLocale())
+            ) : "");
+            row.createCell(19).setCellValue((commercialInsurance != null && commercialInsurance.getSettlementState() != null) ? (
+                    commercialInsurance.getSettlementState().equals(CfgSettlementState.Settled) ?
+                            messageSource.getMessage(CfgSettlementState.Settled.toString(), null, LocaleContextHolder.getLocale()) :
+                            messageSource.getMessage(CfgSettlementState.By.toString(), new Object[] { commercialInsurance.getSettlementDate() }, LocaleContextHolder.getLocale())
+            ) : "");
+            row.createCell(20).setCellValue((wages != null && wages.getSettlementState() != null) ? (
+                    wages.getSettlementState().equals(CfgSettlementState.Settled) ?
+                            messageSource.getMessage(CfgSettlementState.Settled.toString(), null, LocaleContextHolder.getLocale()) :
+                            messageSource.getMessage(CfgSettlementState.By.toString(), new Object[] { wages.getSettlementDate() }, LocaleContextHolder.getLocale())
+            ) : "");
+            SysManageCost manageCost = sysExpatriate.getManageCost();
+            row.createCell(21).setCellValue((manageCost != null && manageCost.getSettlementState() != null) ? (
+                    manageCost.getSettlementState().equals(CfgSettlementState.Settled) ?
+                            messageSource.getMessage(CfgSettlementState.Settled.toString(), null, LocaleContextHolder.getLocale()) :
+                            messageSource.getMessage(CfgSettlementState.By.toString(), new Object[] { manageCost.getSettlementDate() }, LocaleContextHolder.getLocale())
+            ) : "");
+            SysServiceCost serviceCost = sysExpatriate.getServiceCost();
+            row.createCell(22).setCellValue((serviceCost != null && serviceCost.getSettlementState() != null) ? (
+                    serviceCost.getSettlementState().equals(CfgSettlementState.Settled) ?
+                            messageSource.getMessage(CfgSettlementState.Settled.toString(), null, LocaleContextHolder.getLocale()) :
+                            messageSource.getMessage(CfgSettlementState.By.toString(), new Object[] { serviceCost.getSettlementDate() }, LocaleContextHolder.getLocale())
+            ) : "");
+        });
+        try {
+            workbook.write(outputStream);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 
