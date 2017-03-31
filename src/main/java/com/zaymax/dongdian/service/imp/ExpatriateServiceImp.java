@@ -27,10 +27,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
+import javax.persistence.criteria.*;
 import javax.servlet.ServletOutputStream;
 import java.io.IOException;
 import java.text.DecimalFormat;
@@ -67,6 +64,9 @@ public class ExpatriateServiceImp implements ExpatriateService {
             @Override
             public Predicate toPredicate(Root<SysExpatriate> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
                 Predicate predicate = criteriaBuilder.and(criteriaBuilder.equal(root.get(SysExpatriate_.deleted), Boolean.FALSE));
+                //测试是否连接
+                Fetch<SysExpatriate, SysSocialInsurance> socialInsuranceFetch = root.fetch(SysExpatriate_.socialInsurance, JoinType.LEFT);
+                Fetch<SysExpatriate, SysCommercialInsurance> commercialInsuranceFetch = root.fetch(SysExpatriate_.commercialInsurance, JoinType.LEFT);
                 if (expatriate != null) {
                     if (!Strings.isNullOrEmpty(expatriate.getName())) {
                         predicate = criteriaBuilder.and(
@@ -74,6 +74,7 @@ public class ExpatriateServiceImp implements ExpatriateService {
                         );
                     }
                 }
+                criteriaQuery.select((Selection)socialInsuranceFetch);
                 return predicate;
             }
         }, pageable);
