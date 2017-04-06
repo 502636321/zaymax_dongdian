@@ -12,13 +12,13 @@
 <div class="table-responsive col-md-9">
     <div class="panel panel-default">
         <div class="panel-heading clearfix">
-            <a class="pull-right btn btn-primary" href="/admin/basic/employer/save" >
-                <i class="glyphicon glyphicon-plus"></i><@spring.message code="button_add" />
+            <a class="pull-right btn btn-primary" href="/admin/basic/employer/save" data-toggle="tooltip" data-placement="bottom" title="<@spring.message code="button_add" />" >
+                <i class="glyphicon glyphicon-plus"></i>
             </a>
-            <form method="post" action="/admin/basic/country" >
+            <form method="post" action="/admin/basic/employer" >
                 <input type="hidden" name="${ _csrf.parameterName }" value="${ _csrf.token }"/>
                 <div class="input-group pull-left col-md-3 col-xs-4">
-                    <input type="text" class="form-control" name="name" value="${ (country.name)!"" }" placeholder="<@spring.message code="input_search" />">
+                    <input type="text" class="form-control" name="name" value="${ (employer.name)!"" }" placeholder="<@spring.message code="input_search" />">
                     <div class="input-group-btn">
                         <button class="btn btn-primary"><i class="glyphicon glyphicon-search"></i></button>
                     </div>
@@ -44,11 +44,11 @@
                 <td>${ ((employer.lastModifiedBy.name)!(employer.lastModifiedBy.username))!"" }</td>
                 <td>${ (employer.lastModifiedDate)!"" }</td>
                 <td>
-                    <a href="/admin/basic/employer/edit/${ (employer.id)!"" }" >
-                        <i class="glyphicon glyphicon-edit" ></i><@spring.message code="button_edit" />
+                    <a href="/admin/basic/employer/edit/${ (employer.id)!"" }" data-toggle="tooltip" data-placement="top" title="<@spring.message code="button_edit" />" >
+                        <i class="glyphicon glyphicon-edit" ></i>
                     </a>
-                    <a href="/admin/basic/employer/delete/${ (employer.id)!"" }" onclick="return window.confirm('<@spring.message code="employer_action_delete_confirm" arguments="${ (employer.name)!\"\" }" />')" >
-                        <i class="glyphicon glyphicon-remove"></i><@spring.message code="button_delete" />
+                    <a href="/admin/basic/employer/delete/${ (employer.id)!"" }" data-toggle="tooltip" data-placement="top" title="<@spring.message code="button_edit" />" onclick="return window.confirm('<@spring.message code="employer_action_delete_confirm" arguments="${ (employer.name)!\"\" }" />')" >
+                        <i class="glyphicon glyphicon-remove"></i>
                     </a>
                 </td>
             </tr>

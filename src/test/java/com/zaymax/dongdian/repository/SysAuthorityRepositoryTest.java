@@ -67,4 +67,12 @@ public class SysAuthorityRepositoryTest extends ZaymaxDongdianApplicationTests {
             System.out.println(sysAuthority.getId());
         });
     }
+
+    @Test
+    public void findByAuthority() throws Exception {
+//        SysAuthority authority = authorityRepository.findByAuthority("ROLE_ACTUATOR");
+//        authority.setName("系统后台信息管理");
+//
+//        authorityRepository.save(authority);
+    }
 }

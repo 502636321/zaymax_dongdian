@@ -226,7 +226,7 @@ public class ExpatriateController extends BaseController {
     ) {
         try {
             response.setContentType("application/force-download");// 设置强制下载不打开
-            response.addHeader("Content-Disposition", "attachment;fileName=" + DateFormatUtils.format(new Date(), "yyyyMMddHHmmss") + ".xlsx");
+            response.addHeader("Content-Disposition", "attachment;fileName=" + DateFormatUtils.format(new Date(), "yyyyMMddHHmmss") + ".xls");
             expatriateService.exportExpatriate(response.getOutputStream(), expatriate);
         } catch (IOException e) {
             e.printStackTrace();

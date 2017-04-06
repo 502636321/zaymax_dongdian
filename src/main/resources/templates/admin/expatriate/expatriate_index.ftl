@@ -5,9 +5,13 @@
     <#include "../public/stylesheet.ftl" />
     <#include "../public/script.ftl" />
     <script>
-        function printTable() {
-            $('#expatriate_table').printThis();
-        }
+        $(function() {
+            $('#expatriate_table').tableHeadFixer({
+                'head' : false,
+                'left' : 5,
+                'right': 1
+            })
+        });
     </script>
 </head>
 
@@ -31,7 +35,7 @@
                             <i class="glyphicon glyphicon-export"></i><@spring.message code="button_export" />
                         </a>
                     </div>
-                    <form method="post" action="/admin/basic/country" >
+                    <form method="post" action="/" >
                         <input type="hidden" name="${ _csrf.parameterName }" value="${ _csrf.token }"/>
                         <div class="input-group pull-left col-md-3 col-xs-4">
                             <input type="text" class="form-control" name="name" value="${ (expatriate.name)!"" }" placeholder="<@spring.message code="input_search" />">
@@ -136,11 +140,11 @@
                             </#if>
                         </td>
                         <td>
-                            <a href="/edit/${ (expatriate.id)!"" }" >
-                                <i class="glyphicon glyphicon-edit" ></i><@spring.message code="button_edit" />
+                            <a href="/edit/${ (expatriate.id)!"" }" data-toggle="tooltip" data-placement="top" title="<@spring.message code="button_edit" />" >
+                                <i class="glyphicon glyphicon-edit" ></i>
                             </a>
-                            <a href="/delete/${ (expatriate.id)!"" }" onclick="return window.confirm('<@spring.message code="employer_action_delete_confirm" arguments="${ (expatriate.name)!\"\" }" />')" >
-                                <i class="glyphicon glyphicon-remove"></i><@spring.message code="button_delete" />
+                            <a href="/delete/${ (expatriate.id)!"" }" data-toggle="tooltip" data-placement="top" title="<@spring.message code="button_delete" />" onclick="return window.confirm('<@spring.message code="employer_action_delete_confirm" arguments="${ (expatriate.name)!\"\" }" />')" >
+                                <i class="glyphicon glyphicon-remove"></i>
                             </a>
                         </td>
                     </tr>

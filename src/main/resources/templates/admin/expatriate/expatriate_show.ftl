@@ -1,32 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<#include "../public/meta.ftl" />
-<#include "../public/stylesheet.ftl" />
-<#include "../public/script.ftl" />
-    <script>
-        $(function () {
-            $('form[action="/save"]').validate({
-                rules: {
-                    'name': {
-                        required : true
-                    }
-                },
-                messages: {
-                    'name': {
-                        required: '<@spring.message code="expatriate_attribute_name_rule_required" />',
-                    }
-                }
-            });
-        });
-        function disabledSettlementDate(_self, s) {
-            if ('By' == $(_self).val()) {
-                $(s).show();
-            } else {
-                $(s).hide();
-            }
-        }
-    </script>
+    <#include "../public/meta.ftl" />
+    <#include "../public/stylesheet.ftl" />
+    <#include "../public/script.ftl" />
 </head>
 
 <body class="main-body" >
@@ -43,7 +20,7 @@
                 <div class="panel-heading">&nbsp;</div>
                 <div class="panel-body">
                 <#include "../public/ALERT_MESSAGE.ftl" />
-                    <form class="form-horizontal col-md-offset-1 col-md-10" >
+                    <form class="form-horizontal col-md-offset-1 col-md-10" id="expatriate_show_form" >
                         <input type="hidden" name="${ _csrf.parameterName }" value="${ _csrf.token }"/>
                         <div class="form-group">
                             <label for="number" class="col-md-2 control-label"><@spring.message code="expatriate_attribute_number" /></label>
@@ -277,7 +254,7 @@
                         </fieldset>
                         <div class="form-group">
                             <div class="col-md-offset-2 col-md-8">
-                                <button type="button" class="btn btn-primary pull-right" ><@spring.message code="button_print" /></button>
+                                <button type="button" class="btn btn-primary pull-right" onclick="$('#expatriate_show_form').printThis()" ><@spring.message code="button_print" /></button>
                                 <a type="button" class="btn btn-default" href="/" ><@spring.message code="button_return" /></a>
                             </div>
                         </div>

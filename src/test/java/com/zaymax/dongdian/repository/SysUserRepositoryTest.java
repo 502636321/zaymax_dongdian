@@ -36,7 +36,7 @@ public class SysUserRepositoryTest extends ZaymaxDongdianApplicationTests {
 
     @Test
     public void delete() throws Exception {
-
+        System.out.printf("char最大值[{%d}]%n", (int)Character.MAX_VALUE);
     }
 
     @Test

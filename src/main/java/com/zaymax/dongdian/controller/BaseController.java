@@ -18,7 +18,7 @@ import java.io.Serializable;
 public class BaseController implements Serializable, MessageSourceAware {
     public static final String PAGE_REQUEST_PAGE = "0";
     public static final String PAGE_REQUEST_SIZE = "15";
-    public static final String PAGE_REQUEST_SORT = "lastModifiedDate";
+    public static final String PAGE_REQUEST_SORT = "createdDate";
     public static final String SUCCESS_MESSAGE = "success_msg";
     public static final String ERROR_MESSAGE = "error_msg";
 

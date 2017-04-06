@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 /**
  * Created by huiquan on 2017/3/22.
@@ -39,7 +40,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .formLogin().loginPage("/login")
                 .permitAll()
-                .defaultSuccessUrl("/index");
+                .defaultSuccessUrl("/index")
+                .and()
+                .logout()
+                .logoutSuccessUrl("/login");
+//                .logoutRequestMatcher(new AntPathRequestMatcher("/logout"));
     }
 
     public UserDetailsService getUserDetailsService() {

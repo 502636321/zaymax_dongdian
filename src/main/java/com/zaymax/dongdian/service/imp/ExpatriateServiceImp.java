@@ -16,6 +16,7 @@ import org.apache.commons.lang3.time.DateUtils;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.util.CellRangeAddress;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,16 +66,13 @@ public class ExpatriateServiceImp implements ExpatriateService {
             public Predicate toPredicate(Root<SysExpatriate> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
                 Predicate predicate = criteriaBuilder.and(criteriaBuilder.equal(root.get(SysExpatriate_.deleted), Boolean.FALSE));
                 //测试是否连接
-                Fetch<SysExpatriate, SysSocialInsurance> socialInsuranceFetch = root.fetch(SysExpatriate_.socialInsurance, JoinType.LEFT);
-                Fetch<SysExpatriate, SysCommercialInsurance> commercialInsuranceFetch = root.fetch(SysExpatriate_.commercialInsurance, JoinType.LEFT);
                 if (expatriate != null) {
                     if (!Strings.isNullOrEmpty(expatriate.getName())) {
                         predicate = criteriaBuilder.and(
-                                criteriaBuilder.like(root.get(SysExpatriate_.name), "%" + expatriate.getName() + "%")
+                                criteriaBuilder.like(root.get(SysExpatriate_.name), "%" + expatriate.getName() + "%"), predicate
                         );
                     }
                 }
-                criteriaQuery.select((Selection)socialInsuranceFetch);
                 return predicate;
             }
         }, pageable);
@@ -275,73 +273,132 @@ public class ExpatriateServiceImp implements ExpatriateService {
     @Override
     public void exportExpatriate(ServletOutputStream outputStream, SysExpatriate expatriate) {
         HSSFWorkbook workbook = new HSSFWorkbook();
-        HSSFSheet sheet = workbook.createSheet();
         final int[] rowIndex = {0};
-        findExpatriatePage(new PageRequest(0, Integer.MAX_VALUE), expatriate).getContent().forEach(sysExpatriate -> {
-            HSSFRow row = sheet.createRow(rowIndex[0]++);
-            row.createCell(0).setCellValue(sysExpatriate.getNumber());
-            row.createCell(1).setCellValue(sysExpatriate.getName());
-            row.createCell(2).setCellValue(messageSource.getMessage(sysExpatriate.getGender() != null ? sysExpatriate.getGender().toString() : "blank", null, LocaleContextHolder.getLocale()));
-            row.createCell(3).setCellValue(sysExpatriate.getCardNO() != null ? sysExpatriate.getCardNO() : "");
-            row.createCell(4).setCellValue(sysExpatriate.getCountry() != null ? sysExpatriate.getCountry().getName() : "");
-            row.createCell(5).setCellValue(sysExpatriate.getExpatriateDate() != null ? DateFormatUtils.format(sysExpatriate.getExpatriateDate(), "yyyy-MM-dd") : "");
-            row.createCell(6).setCellValue(sysExpatriate.getContractPeriod() != null ? sysExpatriate.getContractPeriod() : 0);
-            row.createCell(7).setCellValue(sysExpatriate.getEmployer() != null ? sysExpatriate.getEmployer().getName() : "");
+        Pageable pageable = new PageRequest(0, (int) Character.MAX_VALUE - 2);
+        Page<SysExpatriate> expatriatePage = null;
+        do {
+            HSSFSheet sheet = workbook.createSheet();
+            sheet.addMergedRegion(new CellRangeAddress(0, 1, 0, 0));
+            sheet.addMergedRegion(new CellRangeAddress(0, 1, 1, 1));
+            sheet.addMergedRegion(new CellRangeAddress(0, 1, 2, 2));
+            sheet.addMergedRegion(new CellRangeAddress(0, 1, 3, 3));
+            sheet.addMergedRegion(new CellRangeAddress(0, 1, 4, 4));
+            sheet.addMergedRegion(new CellRangeAddress(0, 1, 5, 5));
+            sheet.addMergedRegion(new CellRangeAddress(0, 1, 6, 6));
+            sheet.addMergedRegion(new CellRangeAddress(0, 1, 7, 7));
+
+            sheet.addMergedRegion(new CellRangeAddress(0, 0, 8, 12)); //社会保险
+            sheet.addMergedRegion(new CellRangeAddress(0, 0, 13, 15)); //商业保险
+            sheet.addMergedRegion(new CellRangeAddress(0, 0, 16, 17)); //工资
+            sheet.addMergedRegion(new CellRangeAddress(0, 0, 18, 22)); //费用结算
+            HSSFRow headerRow = sheet.createRow(rowIndex[0]++);
+            headerRow.createCell(0).setCellValue(messageSource.getMessage("expatriate_attribute_number", null, LocaleContextHolder.getLocale()));
+            headerRow.createCell(1).setCellValue(messageSource.getMessage("expatriate_attribute_name", null, LocaleContextHolder.getLocale()));
+            headerRow.createCell(2).setCellValue(messageSource.getMessage("expatriate_attribute_gender", null, LocaleContextHolder.getLocale()));
+            headerRow.createCell(3).setCellValue(messageSource.getMessage("expatriate_attribute_card_no", null, LocaleContextHolder.getLocale()));
+            headerRow.createCell(4).setCellValue(messageSource.getMessage("expatriate_attribute_country", null, LocaleContextHolder.getLocale()));
+            headerRow.createCell(5).setCellValue(messageSource.getMessage("expatriate_attribute_expatriate_date", null, LocaleContextHolder.getLocale()));
+            headerRow.createCell(6).setCellValue(messageSource.getMessage("expatriate_attribute_contract_period", null, LocaleContextHolder.getLocale()));
+            headerRow.createCell(7).setCellValue(messageSource.getMessage("expatriate_attribute_employer", null, LocaleContextHolder.getLocale()));
             //社会保险
-            SysSocialInsurance socialInsurance = sysExpatriate.getSocialInsurance();
-            row.createCell(8).setCellValue((socialInsurance != null && socialInsurance.getInsuranceDate() != null) ? DateFormatUtils.format(socialInsurance.getInsuranceDate(), "yyyy-MM-dd") : "");
-            row.createCell(9).setCellValue((socialInsurance != null && socialInsurance.getPersonalCode() != null) ? socialInsurance.getPersonalCode() : "");
-            row.createCell(10).setCellValue((socialInsurance != null && socialInsurance.getRadices() != null) ? socialInsurance.getRadices() : 0);
-            row.createCell(11).setCellValue((socialInsurance != null && socialInsurance.getCompanyRadices() != null) ? socialInsurance.getCompanyRadices() : 0);
-            row.createCell(12).setCellValue((socialInsurance != null && socialInsurance.getPersonalRadices() != null) ? socialInsurance.getPersonalRadices() : 0);
-
+            headerRow.createCell(8).setCellValue(messageSource.getMessage("social_insurance_index", null, LocaleContextHolder.getLocale()));
             //商业保险
-            SysCommercialInsurance commercialInsurance = sysExpatriate.getCommercialInsurance();
-            row.createCell(13).setCellValue((commercialInsurance != null && commercialInsurance.getPremium() != null ) ? commercialInsurance.getPremium(): 0);
-            row.createCell(14).setCellValue((commercialInsurance != null && commercialInsurance.getPaid() != null ) ? commercialInsurance.getPaid() : 0);
-            row.createCell(15).setCellValue(
-                    (commercialInsurance != null) ? (
-                    (commercialInsurance.getStartPeriod() != null ? (DateFormatUtils.format(commercialInsurance.getStartPeriod(), "yyyy-MM-dd")) : "") +
-                    "-" +
-                    (commercialInsurance.getEndPeriod() != null ? (DateFormatUtils.format(commercialInsurance.getEndPeriod(), "yyyy-MM-dd")) : "")
-                    ) : ""
-            );
+            headerRow.createCell(13).setCellValue(messageSource.getMessage("commercial_insurance_index", null, LocaleContextHolder.getLocale()));
             //工资
-            SysWages wages = sysExpatriate.getWages();
-            row.createCell(16).setCellValue((wages != null && wages.getPaymentDate() != null) ? (DateFormatUtils.format(wages.getPaymentDate(), "yyyy-MM-dd")) : "");
-            row.createCell(17).setCellValue((wages != null && wages.getAmount() != null) ? wages.getAmount() : 0);
-
+            headerRow.createCell(16).setCellValue(messageSource.getMessage("wages_index", null, LocaleContextHolder.getLocale()));
             //费用结算
-            row.createCell(18).setCellValue((socialInsurance != null && socialInsurance.getSettlementState() != null) ? (
-                    socialInsurance.getSettlementState().equals(CfgSettlementState.Settled) ?
-                            messageSource.getMessage(CfgSettlementState.Settled.toString(), null, LocaleContextHolder.getLocale()) :
-                            messageSource.getMessage(CfgSettlementState.By.toString(), new Object[] { socialInsurance.getSettlementDate() }, LocaleContextHolder.getLocale())
-            ) : "");
-            row.createCell(19).setCellValue((commercialInsurance != null && commercialInsurance.getSettlementState() != null) ? (
-                    commercialInsurance.getSettlementState().equals(CfgSettlementState.Settled) ?
-                            messageSource.getMessage(CfgSettlementState.Settled.toString(), null, LocaleContextHolder.getLocale()) :
-                            messageSource.getMessage(CfgSettlementState.By.toString(), new Object[] { commercialInsurance.getSettlementDate() }, LocaleContextHolder.getLocale())
-            ) : "");
-            row.createCell(20).setCellValue((wages != null && wages.getSettlementState() != null) ? (
-                    wages.getSettlementState().equals(CfgSettlementState.Settled) ?
-                            messageSource.getMessage(CfgSettlementState.Settled.toString(), null, LocaleContextHolder.getLocale()) :
-                            messageSource.getMessage(CfgSettlementState.By.toString(), new Object[] { wages.getSettlementDate() }, LocaleContextHolder.getLocale())
-            ) : "");
-            SysManageCost manageCost = sysExpatriate.getManageCost();
-            row.createCell(21).setCellValue((manageCost != null && manageCost.getSettlementState() != null) ? (
-                    manageCost.getSettlementState().equals(CfgSettlementState.Settled) ?
-                            messageSource.getMessage(CfgSettlementState.Settled.toString(), null, LocaleContextHolder.getLocale()) :
-                            messageSource.getMessage(CfgSettlementState.By.toString(), new Object[] { manageCost.getSettlementDate() }, LocaleContextHolder.getLocale())
-            ) : "");
-            SysServiceCost serviceCost = sysExpatriate.getServiceCost();
-            row.createCell(22).setCellValue((serviceCost != null && serviceCost.getSettlementState() != null) ? (
-                    serviceCost.getSettlementState().equals(CfgSettlementState.Settled) ?
-                            messageSource.getMessage(CfgSettlementState.Settled.toString(), null, LocaleContextHolder.getLocale()) :
-                            messageSource.getMessage(CfgSettlementState.By.toString(), new Object[] { serviceCost.getSettlementDate() }, LocaleContextHolder.getLocale())
-            ) : "");
-        });
+            headerRow.createCell(18).setCellValue(messageSource.getMessage("settlement_index", null, LocaleContextHolder.getLocale()));
+
+            headerRow = sheet.createRow(rowIndex[0]++);
+            headerRow.createCell(8).setCellValue(messageSource.getMessage("social_insurance_attribute_insurance_date", null, LocaleContextHolder.getLocale()));
+            headerRow.createCell(9).setCellValue(messageSource.getMessage("social_insurance_attribute_personal_code", null, LocaleContextHolder.getLocale()));
+            headerRow.createCell(10).setCellValue(messageSource.getMessage("social_insurance_attribute_radices", null, LocaleContextHolder.getLocale()));
+            headerRow.createCell(11).setCellValue(messageSource.getMessage("social_insurance_attribute_company_radices", null, LocaleContextHolder.getLocale()));
+            headerRow.createCell(12).setCellValue(messageSource.getMessage("social_insurance_attribute_personal_radices", null, LocaleContextHolder.getLocale()));
+
+            headerRow.createCell(13).setCellValue(messageSource.getMessage("commercial_insurance_attribute_premium", null, LocaleContextHolder.getLocale()));
+            headerRow.createCell(14).setCellValue(messageSource.getMessage("commercial_insurance_attribute_paid", null, LocaleContextHolder.getLocale()));
+            headerRow.createCell(15).setCellValue(messageSource.getMessage("commercial_insurance_attribute_period", null, LocaleContextHolder.getLocale()));
+
+            headerRow.createCell(16).setCellValue(messageSource.getMessage("wages_attribute_settlement_date", null, LocaleContextHolder.getLocale()));
+            headerRow.createCell(17).setCellValue(messageSource.getMessage("wages_attribute_amount", null, LocaleContextHolder.getLocale()));
+
+            headerRow.createCell(18).setCellValue(messageSource.getMessage("social_insurance_index", null, LocaleContextHolder.getLocale()));
+            headerRow.createCell(19).setCellValue(messageSource.getMessage("commercial_insurance_index", null, LocaleContextHolder.getLocale()));
+            headerRow.createCell(20).setCellValue(messageSource.getMessage("wages_index", null, LocaleContextHolder.getLocale()));
+            headerRow.createCell(21).setCellValue(messageSource.getMessage("manage_cost_index", null, LocaleContextHolder.getLocale()));
+            headerRow.createCell(22).setCellValue(messageSource.getMessage("service_cost_index", null, LocaleContextHolder.getLocale()));
+
+            expatriatePage = expatriateRepository.findAll(pageable);
+            expatriatePage.getContent().forEach(sysExpatriate -> {
+                HSSFRow row = sheet.createRow(rowIndex[0]++);
+                row.createCell(0).setCellValue(sysExpatriate.getNumber());
+                row.createCell(1).setCellValue(sysExpatriate.getName());
+                row.createCell(2).setCellValue(messageSource.getMessage(sysExpatriate.getGender() != null ? sysExpatriate.getGender().toString() : "blank", null, LocaleContextHolder.getLocale()));
+                row.createCell(3).setCellValue(sysExpatriate.getCardNO() != null ? sysExpatriate.getCardNO() : "");
+                row.createCell(4).setCellValue(sysExpatriate.getCountry() != null ? sysExpatriate.getCountry().getName() : "");
+                row.createCell(5).setCellValue(sysExpatriate.getExpatriateDate() != null ? DateFormatUtils.format(sysExpatriate.getExpatriateDate(), "yyyy-MM-dd") : "");
+                row.createCell(6).setCellValue(sysExpatriate.getContractPeriod() != null ? sysExpatriate.getContractPeriod() : 0);
+                row.createCell(7).setCellValue(sysExpatriate.getEmployer() != null ? sysExpatriate.getEmployer().getName() : "");
+                //社会保险
+                SysSocialInsurance socialInsurance = sysExpatriate.getSocialInsurance();
+                row.createCell(8).setCellValue((socialInsurance != null && socialInsurance.getInsuranceDate() != null) ? DateFormatUtils.format(socialInsurance.getInsuranceDate(), "yyyy-MM-dd") : "");
+                row.createCell(9).setCellValue((socialInsurance != null && socialInsurance.getPersonalCode() != null) ? socialInsurance.getPersonalCode() : "");
+                row.createCell(10).setCellValue((socialInsurance != null && socialInsurance.getRadices() != null) ? socialInsurance.getRadices() : 0);
+                row.createCell(11).setCellValue((socialInsurance != null && socialInsurance.getCompanyRadices() != null) ? socialInsurance.getCompanyRadices() : 0);
+                row.createCell(12).setCellValue((socialInsurance != null && socialInsurance.getPersonalRadices() != null) ? socialInsurance.getPersonalRadices() : 0);
+
+                //商业保险
+                SysCommercialInsurance commercialInsurance = sysExpatriate.getCommercialInsurance();
+                row.createCell(13).setCellValue((commercialInsurance != null && commercialInsurance.getPremium() != null ) ? commercialInsurance.getPremium(): 0);
+                row.createCell(14).setCellValue((commercialInsurance != null && commercialInsurance.getPaid() != null ) ? commercialInsurance.getPaid() : 0);
+                row.createCell(15).setCellValue(
+                        (commercialInsurance != null) ? (
+                                (commercialInsurance.getStartPeriod() != null ? (DateFormatUtils.format(commercialInsurance.getStartPeriod(), "yyyy-MM-dd")) : "") +
+                                        "-" +
+                                        (commercialInsurance.getEndPeriod() != null ? (DateFormatUtils.format(commercialInsurance.getEndPeriod(), "yyyy-MM-dd")) : "")
+                        ) : ""
+                );
+                //工资
+                SysWages wages = sysExpatriate.getWages();
+                row.createCell(16).setCellValue((wages != null && wages.getPaymentDate() != null) ? (DateFormatUtils.format(wages.getPaymentDate(), "yyyy-MM-dd")) : "");
+                row.createCell(17).setCellValue((wages != null && wages.getAmount() != null) ? wages.getAmount() : 0);
+
+                //费用结算
+                row.createCell(18).setCellValue((socialInsurance != null && socialInsurance.getSettlementState() != null) ? (
+                        socialInsurance.getSettlementState().equals(CfgSettlementState.Settled) ?
+                                messageSource.getMessage(CfgSettlementState.Settled.toString(), null, LocaleContextHolder.getLocale()) :
+                                messageSource.getMessage(CfgSettlementState.By.toString(), new Object[] { socialInsurance.getSettlementDate() }, LocaleContextHolder.getLocale())
+                ) : "");
+                row.createCell(19).setCellValue((commercialInsurance != null && commercialInsurance.getSettlementState() != null) ? (
+                        commercialInsurance.getSettlementState().equals(CfgSettlementState.Settled) ?
+                                messageSource.getMessage(CfgSettlementState.Settled.toString(), null, LocaleContextHolder.getLocale()) :
+                                messageSource.getMessage(CfgSettlementState.By.toString(), new Object[] { commercialInsurance.getSettlementDate() }, LocaleContextHolder.getLocale())
+                ) : "");
+                row.createCell(20).setCellValue((wages != null && wages.getSettlementState() != null) ? (
+                        wages.getSettlementState().equals(CfgSettlementState.Settled) ?
+                                messageSource.getMessage(CfgSettlementState.Settled.toString(), null, LocaleContextHolder.getLocale()) :
+                                messageSource.getMessage(CfgSettlementState.By.toString(), new Object[] { wages.getSettlementDate() }, LocaleContextHolder.getLocale())
+                ) : "");
+                SysManageCost manageCost = sysExpatriate.getManageCost();
+                row.createCell(21).setCellValue((manageCost != null && manageCost.getSettlementState() != null) ? (
+                        manageCost.getSettlementState().equals(CfgSettlementState.Settled) ?
+                                messageSource.getMessage(CfgSettlementState.Settled.toString(), null, LocaleContextHolder.getLocale()) :
+                                messageSource.getMessage(CfgSettlementState.By.toString(), new Object[] { manageCost.getSettlementDate() }, LocaleContextHolder.getLocale())
+                ) : "");
+                SysServiceCost serviceCost = sysExpatriate.getServiceCost();
+                row.createCell(22).setCellValue((serviceCost != null && serviceCost.getSettlementState() != null) ? (
+                        serviceCost.getSettlementState().equals(CfgSettlementState.Settled) ?
+                                messageSource.getMessage(CfgSettlementState.Settled.toString(), null, LocaleContextHolder.getLocale()) :
+                                messageSource.getMessage(CfgSettlementState.By.toString(), new Object[] { serviceCost.getSettlementDate() }, LocaleContextHolder.getLocale())
+                ) : "");
+            });
+
+            pageable = expatriatePage.nextPageable();
+        } while (expatriatePage != null && expatriatePage.hasNext());
         try {
             workbook.write(outputStream);
+            outputStream.flush();
         } catch (IOException e) {
             e.printStackTrace();
         }

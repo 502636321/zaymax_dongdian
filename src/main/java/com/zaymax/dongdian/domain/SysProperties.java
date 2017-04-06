@@ -43,6 +43,12 @@ public class SysProperties extends BaseDomain {
     private String systemTitle;
 
     /**
+     * 登录标题(登录界面)
+     */
+    @Column(name = "LOGIN_TITLE")
+    private String loginTitle;
+
+    /**
      * 自动根据名称创建外派国别
      * @return
      */
@@ -109,5 +115,13 @@ public class SysProperties extends BaseDomain {
 
     public void setAutoCreateEmployer(Boolean autoCreateEmployer) {
         this.autoCreateEmployer = autoCreateEmployer;
+    }
+
+    public String getLoginTitle() {
+        return loginTitle;
+    }
+
+    public void setLoginTitle(String loginTitle) {
+        this.loginTitle = loginTitle;
     }
 }

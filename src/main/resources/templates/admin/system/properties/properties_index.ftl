@@ -17,7 +17,7 @@
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
             <div class="panel panel-primary">
                 <!-- Default panel contents -->
-                <div class="panel-heading">Panel heading</div>
+                <div class="panel-heading"><@spring.message code="system_properties" /></div>
                 <div class="panel-body">
                     <div class="embed-responsive embed-responsive-16by9">
                         <iframe class="embed-responsive-item" src="/admin/properties/save"></iframe>

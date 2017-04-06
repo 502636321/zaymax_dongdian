@@ -20,7 +20,6 @@ public class SpringSecurityAuditorAware implements AuditorAware<SysUser> {
     public SysUser getCurrentAuditor() {
         LOGGER.debug("获取当前登录用户");
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
         if (authentication == null || !authentication.isAuthenticated()) {
             return null;
         }

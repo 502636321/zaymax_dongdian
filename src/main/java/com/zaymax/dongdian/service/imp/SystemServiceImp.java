@@ -57,8 +57,13 @@ public class SystemServiceImp implements SystemService {
         return roleRepository.findAll(new Specification<SysRole>() {
             @Override
             public Predicate toPredicate(Root<SysRole> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
-                criteriaQuery.where(criteriaBuilder.equal(root.get("deleted"), false));
-                return null;
+                Predicate predicate = criteriaBuilder.and(criteriaBuilder.equal(root.get(SysRole_.deleted), Boolean.FALSE));
+                if (role != null) {
+                    if (!Strings.isNullOrEmpty(role.getName())) {
+                        predicate = criteriaBuilder.and(criteriaBuilder.like(root.get(SysRole_.name), "%" + role.getName() + "%"), predicate);
+                    }
+                }
+                return predicate;
             }
         }, pageable);
     }
@@ -119,8 +124,13 @@ public class SystemServiceImp implements SystemService {
         return userRepository.findAll(new Specification<SysUser>() {
             @Override
             public Predicate toPredicate(Root<SysUser> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
-                criteriaQuery.where(criteriaBuilder.equal(root.get("deleted"), false));
-                return null;
+                Predicate predicate = criteriaBuilder.and(criteriaBuilder.equal(root.get(SysUser_.deleted), Boolean.FALSE));
+                if (user != null) {
+                    if (!Strings.isNullOrEmpty(user.getName())) {
+                        predicate = criteriaBuilder.and(criteriaBuilder.like(root.get(SysUser_.name), "%" + user.getName() + "%"),  predicate);
+                    }
+                }
+                return predicate;
             }
         }, pageable);
     }
@@ -239,11 +249,18 @@ public class SystemServiceImp implements SystemService {
     //------------权限-开始------------//
     @Override
     public Page<SysAuthority> findAuthorityPage(Pageable pageable, SysAuthority authority) {
+        LOGGER.debug("开始分页[页码[{}], 数量[{}]]查询权限", pageable.getPageNumber(), pageable.getPageSize());
         return authorityRepository.findAll(new Specification<SysAuthority>() {
             @Override
             public Predicate toPredicate(Root<SysAuthority> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
-                criteriaQuery.where(criteriaBuilder.equal(root.get("deleted"), false));
-                return null;
+                Predicate predicate = criteriaBuilder.and(criteriaBuilder.equal(root.get(SysAuthority_.deleted), Boolean.FALSE));
+                if (authority != null) {
+                    if (!Strings.isNullOrEmpty(authority.getAuthority())) {
+                        LOGGER.debug("分页权限增加[权限[{}]]", authority.getAuthority());
+                        predicate = criteriaBuilder.and(criteriaBuilder.like(root.get(SysAuthority_.name), "%" + authority.getAuthority() + "%"), predicate);
+                    }
+                }
+                return predicate;
             }
         }, pageable);
     }

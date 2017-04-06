@@ -2,10 +2,7 @@ package com.zaymax.dongdian.service.imp;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
-import com.zaymax.dongdian.domain.BaseCountry;
-import com.zaymax.dongdian.domain.BaseCountry_;
-import com.zaymax.dongdian.domain.BaseEmployer;
-import com.zaymax.dongdian.domain.SysProperties;
+import com.zaymax.dongdian.domain.*;
 import com.zaymax.dongdian.repository.BaseCountryRepository;
 import com.zaymax.dongdian.repository.BaseEmployerRepository;
 import com.zaymax.dongdian.repository.SysPropertiesRepository;
@@ -53,7 +50,7 @@ public class BasicServiceImp implements BasicService {
                 if (country != null) {
                     if (!Strings.isNullOrEmpty(country.getName())) {
                         predicate = criteriaBuilder.and(
-                            criteriaBuilder.like(root.get(BaseCountry_.name), "%" + country.getName() + "%")
+                            criteriaBuilder.like(root.get(BaseCountry_.name), "%" + country.getName() + "%"), predicate
                         );
                     }
                 }
@@ -133,8 +130,13 @@ public class BasicServiceImp implements BasicService {
         return employerRepository.findAll(new Specification<BaseEmployer>() {
             @Override
             public Predicate toPredicate(Root<BaseEmployer> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
-                criteriaQuery.where(criteriaBuilder.equal(root.get("deleted"), false));
-                return null;
+                Predicate predicate = criteriaBuilder.and(criteriaBuilder.equal(root.get("deleted"), false));
+                if (employer != null) {
+                    if (!Strings.isNullOrEmpty(employer.getName())) {
+                        predicate = criteriaBuilder.and(criteriaBuilder.like(root.get(BaseEmployer_.name), "%" + employer.getName() + "%"), predicate);
+                    }
+                }
+                return predicate;
             }
         }, pageable);
     }

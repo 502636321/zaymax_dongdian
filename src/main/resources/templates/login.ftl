@@ -14,7 +14,7 @@
 
     <form class="form-signin" method="post" action="/login">
         <input type="hidden" name="${ _csrf.parameterName }" value="${ _csrf.token }"/>
-        <h2 class="form-signin-heading"><@spring.message code="title_login" /></h2>
+        <h2 class="form-signin-heading">${ (lastProperties.loginTitle)!"登录" }</h2>
         <#if Session.SPRING_SECURITY_LAST_EXCEPTION?? && Session.SPRING_SECURITY_LAST_EXCEPTION.message?has_content>
             ${ (Session.SPRING_SECURITY_LAST_EXCEPTION.message)!"" }
         </#if>

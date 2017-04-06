@@ -13,8 +13,8 @@
 <div class="table-responsive col-md-9">
     <div class="panel panel-default">
         <div class="panel-heading clearfix" >
-            <a class="pull-right btn btn-primary" href="/admin/basic/country/save" >
-                <i class="glyphicon glyphicon-plus"></i><@spring.message code="button_add" />
+            <a class="pull-right btn btn-primary" href="/admin/basic/country/save" data-toggle="tooltip" data-placement="bottom" title="<@spring.message code="button_add" />" >
+                <i class="glyphicon glyphicon-plus"></i>
             </a>
             <form method="post" action="/admin/basic/country" >
                 <input type="hidden" name="${ _csrf.parameterName }" value="${ _csrf.token }"/>
@@ -45,11 +45,11 @@
                 <td>${ ((country.lastModifiedBy.name)!(country.lastModifiedBy.username))!"" }</td>
                 <td>${ ((country.lastModifiedDate)!"")?string("yyyy-MM-dd HH:mm") }</td>
                 <td>
-                    <a href="/admin/basic/country/edit/${ (country.id)!"" }" >
-                        <i class="glyphicon glyphicon-edit" ></i><@spring.message code="button_edit" />
+                    <a href="/admin/basic/country/edit/${ (country.id)!"" }" data-toggle="tooltip" data-placement="top" title="<@spring.message code="button_edit" />" >
+                        <i class="glyphicon glyphicon-edit" ></i>
                     </a>
-                    <a href="/admin/basic/country/delete/${ (country.id)!"" }" onclick="return window.confirm('<@spring.message code="country_action_delete_confirm" arguments="${ (country.name)!\"\" }" />')" >
-                        <i class="glyphicon glyphicon-remove"></i><@spring.message code="button_delete" />
+                    <a href="/admin/basic/country/delete/${ (country.id)!"" }" data-toggle="tooltip" data-placement="top" title="<@spring.message code="button_delete" />" onclick="return window.confirm('<@spring.message code="country_action_delete_confirm" arguments="${ (country.name)!\"\" }" />')" >
+                        <i class="glyphicon glyphicon-remove"></i>
                     </a>
                 </td>
             </tr>

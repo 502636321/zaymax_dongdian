@@ -19,6 +19,7 @@
 <script src="/bootstrap-datetimepicker-master/js/locales/bootstrap-datetimepicker.zh-CN.js"></script>
 <script src="/js/bootstrap3-typeahead.min.js"></script>
 <script src="/js/multiselect.min.js"></script>
+<script src="/js/tableHeadFixer.js"></script>
 <script src="/js/printThis.js"></script>
 <!-- Just to make our placeholder images work. Don't actually copy the next line! -->
 <script src="/bootstrap-3.3.7/docs/assets/js/vendor/holder.min.js"></script>
@@ -26,6 +27,7 @@
 <script src="/bootstrap-3.3.7/docs/assets/js/ie10-viewport-bug-workaround.js"></script>
 <script>
     $(function() {
+        $('[data-toggle="tooltip"]').tooltip();
         $(".form_datetime").datetimepicker({
             format: 'yyyy-mm-dd',
             minView: 'month',

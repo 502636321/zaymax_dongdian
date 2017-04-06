@@ -43,6 +43,12 @@
                 <input type="text" class="form-control" id="systemTitle" name="systemTitle" value="${ (properties.systemTitle)!"" }" >
             </div>
         </div>
+        <div class="form-group">
+            <label for="loginTitle" class="col-md-2 control-label"><@spring.message code="properties_attribute_login_title" /></label>
+            <div class="col-md-8">
+                <input type="text" class="form-control" id="loginTitle" name="loginTitle" value="${ (properties.loginTitle)!"" }" >
+            </div>
+        </div>
     </fieldset>
     <fieldset>
         <legend>微信参数</legend>

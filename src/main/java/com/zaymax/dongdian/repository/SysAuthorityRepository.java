@@ -45,4 +45,6 @@ public interface SysAuthorityRepository extends JpaRepository<SysAuthority, Stri
      * @param strings
      */
     List<SysAuthority> findByIdIn(List<String> strings);
+
+    SysAuthority findByAuthority(String authority);
 }
