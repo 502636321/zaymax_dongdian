@@ -25,6 +25,7 @@ public class BaseEmployerRepositoryTest extends ZaymaxDongdianApplicationTests {
 
     @Test
     public void save() throws Exception {
+        //tets
         for (int i = 0; i < 50; i++) {
             BaseEmployer employer = new BaseEmployer();
             employer.setName("雇主[" + i + "]");
